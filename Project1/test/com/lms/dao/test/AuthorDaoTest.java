@@ -1,6 +1,7 @@
 package com.lms.dao.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -69,6 +70,6 @@ public class AuthorDaoTest {
 		authorDao.save(author);
 		Author newUpdate = new Author(ID, "test 2");
 		authorDao.update(newUpdate);
-		assertTrue(author.getAuthorName() != newUpdate.getAuthorName());
+		assertFalse(author.getAuthorName().equals(newUpdate.getAuthorName()));
 	}
 }

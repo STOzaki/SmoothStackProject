@@ -1,6 +1,7 @@
 package com.lms.dao.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -69,8 +70,8 @@ public class PublisherDaoTest {
 		publisherDaoIml.save(publisher);
 		Publisher newUpdate = new Publisher(ID, "publisher name2", "publisher address2", "0987654321");
 		publisherDaoIml.update(newUpdate);
-		assertTrue(publisher.getPublisherName() != newUpdate.getPublisherName());
-		assertTrue(publisher.getPublisherAddress() != newUpdate.getPublisherAddress());
-		assertTrue(publisher.getPublisherPhone() != newUpdate.getPublisherPhone());
+		assertFalse(publisher.getPublisherName().equals(newUpdate.getPublisherName()));
+		assertFalse(publisher.getPublisherAddress().equals(newUpdate.getPublisherAddress()));
+		assertFalse(publisher.getPublisherPhone().equals(newUpdate.getPublisherPhone()));
 	}
 }
