@@ -39,11 +39,12 @@ public class AuthorDaoImpl implements AuthorDao{
 		// save all non deleted entries into newFileString
 		while((currentLine = br.readLine()) != null) {
 			String[] splitEntry = currentLine.split(REGEX);
+			int entryId = Integer.parseInt(splitEntry[0]);
 
-			if(Integer.parseInt(splitEntry[0]) != id) {
+			if(entryId != id) {
 				newFileString.add(currentLine);
 			} else {
-				deletedAuthor = new Author(Integer.parseInt(splitEntry[0]), splitEntry[1]);
+				deletedAuthor = new Author(entryId, splitEntry[1]);
 			}
 		}
 		br.close();
