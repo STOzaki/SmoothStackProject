@@ -31,7 +31,7 @@ public class PublisherDaoTest {
 	
 	@AfterEach
 	void tearThis() throws FileNotFoundException, IOException {
-		// WARNING maybe something that doesnt call the method we are tryin to test
+		// WARNING maybe something that doesnt call the method we are trying to test
 		publisherDaoIml.delete(ID);
 	}
 
