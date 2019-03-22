@@ -58,7 +58,7 @@ public class AuthorDaoTest {
 		assertEquals(author.getId(), authorDao.find(ID).getId());
 	}
 	
-	@DisplayName("return null for authors not found")
+	@DisplayName("return null for author not found")
 	@Test
 	public void notFindAuthorTest() throws IOException {
 		assertNull(authorDao.find(ID));
