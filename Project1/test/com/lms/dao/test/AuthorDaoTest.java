@@ -65,11 +65,14 @@ public class AuthorDaoTest {
 		assertNull(authorDao.find(ID));
 	}
 	
+	@DisplayName("Will update correct")
 	@Test
 	public void updateAuthorTest() throws FileNotFoundException, IOException {
 		authorDao.save(author);
 		Author newUpdate = new Author(ID, "test 2");
 		authorDao.update(newUpdate);
-		assertFalse(author.getAuthorName().equals(newUpdate.getAuthorName()));
+		Author newauthor = authorDao.find(ID);
+		assertEquals(newauthor.getId(), newUpdate.getId());
+		assertTrue(newauthor.getAuthorName().equals(newUpdate.getAuthorName()));
 	}
 }

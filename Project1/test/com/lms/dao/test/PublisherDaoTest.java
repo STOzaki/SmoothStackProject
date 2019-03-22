@@ -65,13 +65,16 @@ public class PublisherDaoTest {
 		assertNull(publisherDaoIml.find(ID));
 	}
 	
+	@DisplayName("Will update correct")
 	@Test
 	public void updatePublisherTest() throws FileNotFoundException, IOException {
 		publisherDaoIml.save(publisher);
 		Publisher newUpdate = new Publisher(ID, "publisher name2", "publisher address2", "0987654321");
 		publisherDaoIml.update(newUpdate);
-		assertFalse(publisher.getPublisherName().equals(newUpdate.getPublisherName()));
-		assertFalse(publisher.getPublisherAddress().equals(newUpdate.getPublisherAddress()));
-		assertFalse(publisher.getPublisherPhone().equals(newUpdate.getPublisherPhone()));
+		Publisher newPublisher = publisherDaoIml.find(ID);
+		assertEquals(newPublisher.getId(), newUpdate.getId());
+		assertTrue(newPublisher.getPublisherName().equals(newUpdate.getPublisherName()));
+		assertTrue(newPublisher.getPublisherAddress().equals(newUpdate.getPublisherAddress()));
+		assertTrue(newPublisher.getPublisherPhone().equals(newUpdate.getPublisherPhone()));
 	}
 }
