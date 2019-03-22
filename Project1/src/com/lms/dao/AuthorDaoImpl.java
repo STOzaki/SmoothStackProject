@@ -86,7 +86,7 @@ public class AuthorDaoImpl implements AuthorDao{
 		}
 		br.close();
 		
-		FileWriter fw = new FileWriter(FILELOCATION);
+		FileWriter fw = new FileWriter(FILELOCATION, false);
 		BufferedWriter bw = new BufferedWriter(fw);
 		PrintWriter pw = new PrintWriter(bw);
 		
