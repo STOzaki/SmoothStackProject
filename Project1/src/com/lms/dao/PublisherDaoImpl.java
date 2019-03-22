@@ -14,7 +14,7 @@ import com.lms.model.Publisher;
 
 public class PublisherDaoImpl {
 	private static String REGEX = "`";
-	private static String FILELOCATION = "./resources/publishers";
+	private static String FILELOCATION = "./resources/publishers.csv";
 
 	// creates new entry using DataObject into file
 	public void save(Publisher publisher) throws IOException {
