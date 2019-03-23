@@ -22,7 +22,7 @@ public class AuthorDaoImpl implements AuthorDao{
 		List<Author> listAuthor = new ArrayList<Author>();
 		listAuthor = this.findAll();
 		
-		// WARNING have not made a test to test if the are not entries
+		// WARNING have not made a test to test if there are not entries
 		int primaryId = 0;
 		if(listAuthor.size() > 0) {
 			primaryId = listAuthor.get(listAuthor.size() - 1).getId() + 1;
