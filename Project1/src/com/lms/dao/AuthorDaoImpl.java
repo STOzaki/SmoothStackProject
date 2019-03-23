@@ -19,7 +19,6 @@ public class AuthorDaoImpl implements AuthorDao{
 	// creates new entry using DataObject into file
 	@Override
 	public void save(Author author) throws IOException {
-		// Warning this does not account for if there is already another id!!
 		List<Author> listAuthor = new ArrayList<Author>();
 		listAuthor = this.findAll();
 		
