@@ -20,7 +20,16 @@ public class AuthorDaoImpl implements AuthorDao{
 	@Override
 	public void save(Author author) throws IOException {
 		// Warning this does not account for if there is already another id!!
-		String entry = author.getId() + REGEX + author.getAuthorName();
+		List<Author> listAuthor = new ArrayList<Author>();
+		listAuthor = this.findAll();
+		
+		// WARNING have not made a test to test if the are not entries
+		int primaryId = 0;
+		if(listAuthor.size() > 0) {
+			primaryId = listAuthor.get(listAuthor.size() - 1).getId() + 1;
+		}
+		
+		String entry = primaryId + REGEX + author.getAuthorName();
 		FileWriter fw = new FileWriter(FILELOCATION, true);
 		BufferedWriter bw = new BufferedWriter(fw);
 		PrintWriter pw = new PrintWriter(bw);
@@ -32,7 +41,6 @@ public class AuthorDaoImpl implements AuthorDao{
 	// returns null if it cannot find the publisher
 	@Override
 	public Author delete(int id) throws FileNotFoundException, IOException {
-		// WARNING This does not account for dependencies with Book
 		FileReader fr = new FileReader(FILELOCATION);
 		BufferedReader br = new BufferedReader(fr);
 		String currentLine;
