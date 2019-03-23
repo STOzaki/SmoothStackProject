@@ -8,7 +8,7 @@ import com.lms.model.Publisher;
 
 public interface PublisherDao {
 	// creates new entry using DataObject into file
-	public abstract void save(Publisher publisher) throws IOException;
+	public abstract int save(Publisher publisher) throws IOException;
 	// deletes associated book entry using the bookId and returns the entry in an dataObject
 	// returns null if it cannot find the publisher
 	public abstract Publisher delete(int id) throws FileNotFoundException, IOException;

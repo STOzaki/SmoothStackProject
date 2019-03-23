@@ -18,7 +18,7 @@ public class PublisherDaoImpl implements PublisherDao{
 
 	// creates new entry using DataObject into file
 	@Override
-	public void save(Publisher publisher) throws IOException {
+	public int save(Publisher publisher) throws IOException {
 		List<Publisher> listPublisher = new ArrayList<Publisher>();
 		listPublisher = this.findAll();
 		
@@ -35,6 +35,7 @@ public class PublisherDaoImpl implements PublisherDao{
 		PrintWriter pw = new PrintWriter(bw);
 		pw.println(newEntry);
 		pw.close();
+		return primaryId;
 	}
 	
 	// deletes associated book entry using the bookId and returns the entry in an dataObject
