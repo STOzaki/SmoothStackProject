@@ -26,14 +26,7 @@ public class PublisherDaoTest {
 	void init() throws IOException {
 		publisherDaoIml = new PublisherDaoImpl();
 		publisher = new Publisher(789, "publisher name", "publisher address", "1234567890");
-		publisherDaoIml.save(publisher);
-		
-		newPublisherId = 0;
-		if(publisherDaoIml.findAll().size() - 1 > -1) {
-			int lastAuthorIndex = publisherDaoIml.findAll().size() - 1;
-			newPublisherId = publisherDaoIml.findAll().get(lastAuthorIndex).getId();
-		}
-		
+		newPublisherId = publisherDaoIml.save(publisher);
 	}
 	
 	@AfterEach
@@ -48,7 +41,7 @@ public class PublisherDaoTest {
 		
 		int previousCount;
 		previousCount = publisherDaoIml.findAll().size();
-		publisherDaoIml.save(publisher);
+		newPublisherId = publisherDaoIml.save(publisher);
 		int currentCount = publisherDaoIml.findAll().size();
 		assertTrue(previousCount < currentCount);
 	}
