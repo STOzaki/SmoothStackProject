@@ -27,13 +27,7 @@ public class BookDaoTest {
 	void init() throws IOException {
 		bookDaoIml = new BookDaoImpl();
 		book = new Book(789, "publisher name", AUTHORnewBookId, PUBLISHERnewBookId);
-		bookDaoIml.save(book);
-		
-		newBookId = 0;
-		if(bookDaoIml.findAll().size() - 1 > -1) {
-			int lastAuthorIndex = bookDaoIml.findAll().size() - 1;
-			newBookId = bookDaoIml.findAll().get(lastAuthorIndex).getId();
-		}
+		newBookId = bookDaoIml.save(book);
 	}
 	
 	@AfterEach
@@ -48,7 +42,7 @@ public class BookDaoTest {
 		
 		int previousCount;
 		previousCount = bookDaoIml.findAll().size();
-		bookDaoIml.save(book);
+		newBookId = bookDaoIml.save(book);
 		int currentCount = bookDaoIml.findAll().size();
 		assertTrue(previousCount < currentCount);
 	}
