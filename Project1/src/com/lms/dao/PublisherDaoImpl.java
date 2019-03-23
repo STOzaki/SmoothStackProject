@@ -12,11 +12,12 @@ import java.util.List;
 
 import com.lms.model.Publisher;
 
-public class PublisherDaoImpl {
+public class PublisherDaoImpl implements PublisherDao{
 	private static String REGEX = "`";
 	private static String FILELOCATION = "./resources/publishers.csv";
 
 	// creates new entry using DataObject into file
+	@Override
 	public void save(Publisher publisher) throws IOException {
 		// WARNING this does not account for if there is already another entry with the same id!!
 		String newEntry = publisher.getId() + REGEX + publisher.getPublisherName() + 
