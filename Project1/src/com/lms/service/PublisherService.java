@@ -11,23 +11,18 @@ import com.lms.model.Book;
 import com.lms.model.Publisher;
 
 public class PublisherService {
-	
-	public static void savePublisher(String publisherName, String publisherAddress, String publisherPhone) {
+
+	// if something goes wrong, it will return -1
+	public static int savePublisher(String publisherName, String publisherAddress, String publisherPhone) {
 		PublisherDaoImpl publisherDao = new PublisherDaoImpl();
-		List<Publisher> publisherList = new ArrayList<Publisher>();
-		
+		Publisher newPublisher = new Publisher(0, publisherName, publisherAddress, publisherPhone);
+		int primaryKey = -1;
 		try {
-			publisherList = publisherDao.findAll();
+			primaryKey = publisherDao.save(newPublisher);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Publisher newAuthor = new Publisher(publisherList.size(), publisherName, publisherAddress, publisherPhone);
-		
-		try {
-			publisherDao.save(newAuthor);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		return primaryKey;
 	}
 	
 	public static Publisher deletePublisher(int id) {
