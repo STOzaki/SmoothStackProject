@@ -31,6 +31,7 @@ public class PublisherDaoImpl implements PublisherDao{
 	
 	// deletes associated book entry using the bookId and returns the entry in an dataObject
 	// returns null if it cannot find the publisher
+	@Override
 	public Publisher delete(int id) throws FileNotFoundException, IOException {
 		// WARNING This does not account for dependencies with Book
 		FileReader fr = new FileReader(FILELOCATION);
@@ -68,6 +69,7 @@ public class PublisherDaoImpl implements PublisherDao{
 	}
 	
 	// Not sure about this (maybe pass id and object and compare the object with the entry and if anything is different then update
+	@Override
 	public void update(Publisher publisher) throws FileNotFoundException, IOException {
 		// WARNING This does not account for if the id does not exist
 		FileReader fr = new FileReader(FILELOCATION);
@@ -102,6 +104,7 @@ public class PublisherDaoImpl implements PublisherDao{
 	}
 
 	// returns DataObject of the requested Id (in the future it can be anything else like name)
+	@Override
 	public Publisher find(int id) throws FileNotFoundException, IOException {
 		// may want to overload to account for if they try to find using Author or whatever
 		Publisher correctPublisher = null;
@@ -118,7 +121,9 @@ public class PublisherDaoImpl implements PublisherDao{
 		br.close();
 		return correctPublisher;
 	}
+	
 	// return DataObject array with all entries in the database
+	@Override
 	public List<Publisher> findAll() throws FileNotFoundException, IOException {
 		List<Publisher> publishers = new ArrayList<Publisher>();
 		FileReader fr = new FileReader(FILELOCATION);

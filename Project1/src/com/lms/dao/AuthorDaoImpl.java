@@ -17,6 +17,7 @@ public class AuthorDaoImpl implements AuthorDao{
 	private static String FILELOCATION = "./resources/authors.csv";
 
 	// creates new entry using DataObject into file
+	@Override
 	public void save(Author author) throws IOException {
 		// Warning this does not account for if there is already another id!!
 		String entry = author.getId() + REGEX + author.getAuthorName();
@@ -29,6 +30,7 @@ public class AuthorDaoImpl implements AuthorDao{
 
 	// deletes associated book entry using the bookId and returns the entry in an dataObject
 	// returns null if it cannot find the publisher
+	@Override
 	public Author delete(int id) throws FileNotFoundException, IOException {
 		// WARNING This does not account for dependencies with Book
 		FileReader fr = new FileReader(FILELOCATION);
@@ -66,6 +68,7 @@ public class AuthorDaoImpl implements AuthorDao{
 	}
 
 	// Not sure about this (maybe pass id and object and compare the object with the entry and if anything is different then update
+	@Override
 	public void update(Author author) throws FileNotFoundException, IOException {
 		// WARNING This does not account for if the id does not exist
 		FileReader fr = new FileReader(FILELOCATION);
@@ -99,6 +102,7 @@ public class AuthorDaoImpl implements AuthorDao{
 	}
 	
 	// returns DataObject of the requested Id (in the future it can be anything else like name)
+	@Override
 	public Author find(int id) throws FileNotFoundException, IOException {
 		// may want to overload to account for if they try to find using Author or whatever
 		Author correctAuthor = null;
@@ -117,6 +121,7 @@ public class AuthorDaoImpl implements AuthorDao{
 	}
 
 	// return DataObject array with all entries in the database
+	@Override
 	public List<Author> findAll() throws FileNotFoundException, IOException {
 		List<Author> authors = new ArrayList<Author>();
 		FileReader fr = new FileReader(FILELOCATION);
