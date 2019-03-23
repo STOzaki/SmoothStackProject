@@ -26,13 +26,8 @@ public class AuthorDaoTest {
 	void init() throws FileNotFoundException, IOException {
 		authorDao = new AuthorDaoImpl();
 		author = new Author(789, "test 1");
-		authorDao.save(author);
+		newAuthorId = authorDao.save(author);
 		
-		newAuthorId = 0;
-		if(authorDao.findAll().size() - 1 > -1) {
-			int lastAuthorIndex = authorDao.findAll().size() - 1;
-			newAuthorId = authorDao.findAll().get(lastAuthorIndex).getId();
-		}
 	}
 	
 	@AfterEach
@@ -47,7 +42,7 @@ public class AuthorDaoTest {
 		
 		int previousCount;
 		previousCount = authorDao.findAll().size();
-		authorDao.save(author);
+		newAuthorId = authorDao.save(author);
 		int currentCount = authorDao.findAll().size();
 		assertTrue(previousCount < currentCount);
 	}

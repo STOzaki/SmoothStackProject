@@ -18,7 +18,7 @@ public class AuthorDaoImpl implements AuthorDao{
 
 	// creates new entry using DataObject into file
 	@Override
-	public void save(Author author) throws IOException {
+	public int save(Author author) throws IOException {
 		List<Author> listAuthor = new ArrayList<Author>();
 		listAuthor = this.findAll();
 		
@@ -34,6 +34,7 @@ public class AuthorDaoImpl implements AuthorDao{
 		PrintWriter pw = new PrintWriter(bw);
 		pw.println(entry);
 		pw.close();
+		return primaryId;
 	}
 
 	// deletes associated book entry using the bookId and returns the entry in an dataObject
