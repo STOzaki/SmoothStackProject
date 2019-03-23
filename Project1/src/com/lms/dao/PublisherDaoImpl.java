@@ -19,8 +19,16 @@ public class PublisherDaoImpl implements PublisherDao{
 	// creates new entry using DataObject into file
 	@Override
 	public void save(Publisher publisher) throws IOException {
-		// WARNING this does not account for if there is already another entry with the same id!!
-		String newEntry = publisher.getId() + REGEX + publisher.getPublisherName() + 
+		List<Publisher> listPublisher = new ArrayList<Publisher>();
+		listPublisher = this.findAll();
+		
+		// WARNING have not made a test to test if there are not entries
+		int primaryId = 0;
+		if(listPublisher.size() > 0) {
+			primaryId = listPublisher.get(listPublisher.size() - 1).getId() + 1;
+		}
+		
+		String newEntry = primaryId + REGEX + publisher.getPublisherName() + 
 				REGEX + publisher.getPublisherAddress() + REGEX + publisher.getPublisherPhone();
 		FileWriter fw = new FileWriter(FILELOCATION, true);
 		BufferedWriter bw = new BufferedWriter(fw);
