@@ -11,22 +11,18 @@ import com.lms.model.Author;
 import com.lms.model.Book;
 
 public class AuthorService {
-	public static void saveAuthor(String authorName) {
-		AuthorDaoImpl authorDao = new AuthorDaoImpl();
-		List<Author> authorList = new ArrayList<Author>();
+	// if something goes wrong, it will return -1
+	public static int saveAuthor(String authorName) {
+		AuthorDaoImpl authorDaoImpl = new AuthorDaoImpl();
+		Author newAuthor = new Author(0, authorName);
+		int primary = -1;
 		
 		try {
-			authorList = authorDao.findAll();
+			primary = authorDaoImpl.save(newAuthor);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Author newAuthor = new Author(authorList.size(), authorName);
-		
-		try {
-			authorDao.save(newAuthor);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		return primary;
 	}
 	
 	public static Author deleteAuthor(int id) {
