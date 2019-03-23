@@ -23,7 +23,7 @@ public class BookDaoImpl implements BookDao{
 		List<Book> listBook = new ArrayList<Book>();
 		listBook = this.findAll();
 		
-		// WARNING have not made a test to test if the are not entries
+		// WARNING have not made a test to test if there are not entries
 		int primaryId = 0;
 		if(listBook.size() > 0) {
 			primaryId = listBook.get(listBook.size() - 1).getId() + 1;
