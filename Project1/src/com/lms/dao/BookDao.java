@@ -8,7 +8,7 @@ import com.lms.model.Book;
 
 public interface BookDao {
 	// creates new entry using DataObject into file
-	public abstract void save(Book book) throws IOException;
+	public abstract int save(Book book) throws IOException;
 	// deletes associated book entry using the bookId and returns the entry in an dataObject
 	// returns null if it cannot find the publisher
 	public abstract Book delete(int id) throws FileNotFoundException, IOException;
