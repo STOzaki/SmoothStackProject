@@ -20,9 +20,16 @@ public class BookDaoImpl implements BookDao{
 	// creates new entry using DataObject into file
 	@Override
 	public void save(Book book) throws IOException {
-		// WARNING not accounting for dependencies with Author and Publisher
-		// Warning this does not account for if there is already another id
-		String entry = book.getId() + REGEX + book.getTitle() + REGEX
+		List<Book> listBook = new ArrayList<Book>();
+		listBook = this.findAll();
+		
+		// WARNING have not made a test to test if the are not entries
+		int primaryId = 0;
+		if(listBook.size() > 0) {
+			primaryId = listBook.get(listBook.size() - 1).getId() + 1;
+		}
+		
+		String entry = primaryId + REGEX + book.getTitle() + REGEX
 				+ book.getAuthorId() + REGEX + book.getPublisherId();
 		FileWriter fw = new FileWriter(FILELOCATION, true);
 		BufferedWriter bw = new BufferedWriter(fw);
