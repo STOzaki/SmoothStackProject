@@ -19,24 +19,33 @@ public class BookDaoTest {
 
 	private Book book;
 	private BookDaoImpl bookDaoIml;
-	private static int ID = 10000;
-	private static int AUTHORID = 111111;
-	private static int PUBLISHERID = 222222;
+	private int newBookId;
+	private static int AUTHORnewBookId = 111111;
+	private static int PUBLISHERnewBookId = 222222;
 	
 	@BeforeEach
-	void init() {
-		book = new Book(ID, "publisher name", AUTHORID, PUBLISHERID);
+	void init() throws IOException {
 		bookDaoIml = new BookDaoImpl();
+		book = new Book(789, "publisher name", AUTHORnewBookId, PUBLISHERnewBookId);
+		bookDaoIml.save(book);
+		
+		newBookId = 0;
+		if(bookDaoIml.findAll().size() - 1 > -1) {
+			int lastAuthorIndex = bookDaoIml.findAll().size() - 1;
+			newBookId = bookDaoIml.findAll().get(lastAuthorIndex).getId();
+		}
 	}
 	
 	@AfterEach
 	void tearThis() throws FileNotFoundException, IOException {
 		// WARNING maybe something that doesnt call the method we are trying to test
-		bookDaoIml.delete(ID);
+		bookDaoIml.delete(newBookId);
 	}
 	
 	@Test
 	public void saveBookTest() throws FileNotFoundException, IOException {
+		bookDaoIml.delete(newBookId);
+		
 		int previousCount;
 		previousCount = bookDaoIml.findAll().size();
 		bookDaoIml.save(book);
@@ -46,31 +55,30 @@ public class BookDaoTest {
 	
 	@Test
 	public void deleteBookTest() throws FileNotFoundException, IOException {
-		bookDaoIml.save(book);
 		int previousCount = bookDaoIml.findAll().size();
-		bookDaoIml.delete(ID);
+		bookDaoIml.delete(newBookId);
 		int currentCount = bookDaoIml.findAll().size();
 		assertTrue(previousCount > currentCount);
 	}
 	
 	@Test
 	public void findBookTest() throws FileNotFoundException, IOException {
-		bookDaoIml.save(book);
-		assertEquals(book.getId(), bookDaoIml.find(ID).getId());
+		assertEquals(newBookId, bookDaoIml.find(newBookId).getId());
 	}
 	
 	@DisplayName("return null for book not found")
 	@Test
 	public void notFindBookTest() throws IOException {
-		assertNull(bookDaoIml.find(ID));
+		bookDaoIml.delete(newBookId);
+		
+		assertNull(bookDaoIml.find(newBookId));
 	}
 	
 	@Test
 	public void updateBookTest() throws FileNotFoundException, IOException {
-		bookDaoIml.save(book);
-		Book newUpdate = new Book(ID, "publisher name2", 123451, 1455123);
+		Book newUpdate = new Book(newBookId, "publisher name2", 123451, 1455123);
 		bookDaoIml.update(newUpdate);
-		Book newBook = bookDaoIml.find(ID);
+		Book newBook = bookDaoIml.find(newBookId);
 		assertEquals(newBook.getId(), newUpdate.getId());
 		assertTrue(newBook.getTitle().equals(newUpdate.getTitle()));
 		assertEquals(newBook.getAuthorId(), (newUpdate.getAuthorId()));
