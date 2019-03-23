@@ -84,7 +84,7 @@ public class AuthorService {
 		return author;
 	}
 	
-	public static List<Author> findAllAuthor() {
+	public static List<Author> findAllAuthors() {
 		List<Author> authorList = new ArrayList<Author>();
 		try {
 			authorList = new AuthorDaoImpl().findAll();

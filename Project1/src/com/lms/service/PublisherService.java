@@ -86,7 +86,7 @@ public class PublisherService {
 		return publisher;
 	}
 	
-	public static List<Publisher> findAllPublisher() {
+	public static List<Publisher> findAllPublishers() {
 		List<Publisher> listPublisher = new ArrayList<Publisher>();
 		try {
 			listPublisher = new PublisherDaoImpl().findAll();
