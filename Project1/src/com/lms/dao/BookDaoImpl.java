@@ -19,7 +19,7 @@ public class BookDaoImpl implements BookDao{
 
 	// creates new entry using DataObject into file
 	@Override
-	public void save(Book book) throws IOException {
+	public int save(Book book) throws IOException {
 		List<Book> listBook = new ArrayList<Book>();
 		listBook = this.findAll();
 		
@@ -36,7 +36,7 @@ public class BookDaoImpl implements BookDao{
 		PrintWriter pw = new PrintWriter(bw);
 		pw.println(entry);
 		pw.close();
-		
+		return primaryId;
 	}
 	
 	// deletes associated book entry using the bookId and returns the entry in an dataObject
