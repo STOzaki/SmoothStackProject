@@ -20,22 +20,27 @@ public class AuthorDaoTest {
 	
 	private Author author;
 	private AuthorDaoImpl authorDao;
-	private static int ID = 10000;
+	private int newAuthorId;
 	
 	@BeforeEach
-	void init() {
-		author = new Author(ID, "test 1");
+	void init() throws FileNotFoundException, IOException {
 		authorDao = new AuthorDaoImpl();
+		author = new Author(789, "test 1");
+		authorDao.save(author);
+		int lastAuthorIndex = authorDao.findAll().size() - 1;
+		newAuthorId = authorDao.findAll().get(lastAuthorIndex).getId();
 	}
 	
 	@AfterEach
 	void tearThis() throws FileNotFoundException, IOException {
-		// WARNING maybe something that doesnt call the method we are trying to test
-		authorDao.delete(ID);
+		// WARNING maybe something that doesn't call the method we are trying to test
+		authorDao.delete(newAuthorId);
 	}
 
 	@Test
 	public void saveTest() throws FileNotFoundException, IOException {
+		authorDao.delete(newAuthorId);
+		
 		int previousCount;
 		previousCount = authorDao.findAll().size();
 		authorDao.save(author);
@@ -45,32 +50,31 @@ public class AuthorDaoTest {
 	
 	@Test
 	public void deleteTest() throws FileNotFoundException, IOException {
-		authorDao.save(author);
 		int previousCount = authorDao.findAll().size();
-		authorDao.delete(ID);
+		authorDao.delete(newAuthorId);
 		int currentCount = authorDao.findAll().size();
 		assertTrue(previousCount > currentCount);
 	}
 	
 	@Test
 	public void findAuthorTest() throws FileNotFoundException, IOException {
-		authorDao.save(author);
-		assertEquals(author.getId(), authorDao.find(ID).getId());
+		assertEquals(newAuthorId, authorDao.find(newAuthorId).getId());
 	}
 	
 	@DisplayName("return null for author not found")
 	@Test
 	public void notFindAuthorTest() throws IOException {
-		assertNull(authorDao.find(ID));
+		authorDao.delete(newAuthorId);
+		
+		assertNull(authorDao.find(newAuthorId));
 	}
 	
 	@DisplayName("Will update correct")
 	@Test
 	public void updateAuthorTest() throws FileNotFoundException, IOException {
-		authorDao.save(author);
-		Author newUpdate = new Author(ID, "test 2");
+		Author newUpdate = new Author(newAuthorId, "test 2");
 		authorDao.update(newUpdate);
-		Author newauthor = authorDao.find(ID);
+		Author newauthor = authorDao.find(newAuthorId);
 		assertEquals(newauthor.getId(), newUpdate.getId());
 		assertTrue(newauthor.getAuthorName().equals(newUpdate.getAuthorName()));
 	}
