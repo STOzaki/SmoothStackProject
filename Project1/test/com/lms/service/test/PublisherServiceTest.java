@@ -78,6 +78,8 @@ public class PublisherServiceTest {
 	public void findPublisherTest() throws FileNotFoundException, IOException {
 		Publisher foundPublisher = PublisherService.findPublisher(newPublisherId);
 		assertTrue(publisherName.equals(foundPublisher.getPublisherName()));
+		assertTrue(publisherAddress.equals(foundPublisher.getPublisherAddress()));
+		assertTrue(publisherPhone.equals(foundPublisher.getPublisherPhone()));
 	}
 	
 	@DisplayName("return null for publisher not found")
