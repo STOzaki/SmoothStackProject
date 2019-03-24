@@ -88,7 +88,6 @@ public class PublisherServiceTest {
 		publisherDao.delete(newPublisherId);
 		assertNull(PublisherService.findPublisher(newPublisherId));
 		newPublisherId = publisherDao.findAll().size();
-		PublisherService.savePublisher(publisherName, publisherAddress, publisherPhone);
 	}
 	
 	
