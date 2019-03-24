@@ -4,47 +4,47 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lms.dao.AuthorDaoImpl;
 import com.lms.dao.BookDaoImpl;
-import com.lms.dao.PublisherDaoImpl;
 import com.lms.model.Author;
 import com.lms.model.Book;
 import com.lms.model.Publisher;
 
 public class BookService {
+	private static final String emptyCell = "N/A";
 	
-	public static void saveBook(String title, int authorId, int publisherId) {
-		PublisherDaoImpl publisherDao = new PublisherDaoImpl();
-		AuthorDaoImpl authorDao = new AuthorDaoImpl();
+	public static int[] saveBook(String title, int authorId, int publisherId) {
 		Publisher publisher = null;
 		Author author = null;
-		try {
-			publisher = publisherDao.find(publisherId);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		try {
-			author = authorDao.find(authorId);
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		publisher = PublisherService.findPublisher(publisherId);
+		author = AuthorService.findAuthor(authorId);
+		
+		int[] primaryIds = new int[3];
+		for(int i = 0; i < primaryIds.length;i++)
+			primaryIds[i] = -1;
+		
+		BookDaoImpl bookDao = new BookDaoImpl();
+		Book book = null;
+		
+		if(publisher == null) {
+			publisherId = PublisherService.savePublisher(emptyCell, emptyCell, emptyCell);
 		}
 		
-		if(publisher != null && author != null) {
-			BookDaoImpl bookDao = new BookDaoImpl();
-			Book book = null;
-			try {
-				book = new Book(bookDao.findAll().size(), title, authorId, publisherId);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			try {
-				bookDao.save(book);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if(author == null) {
+			authorId = AuthorService.saveAuthor(emptyCell);
 		}
+
+		book = new Book(0, title, authorId, publisherId);
+		try {
+			primaryIds[0] = bookDao.save(book);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		primaryIds[1] = authorId;
+		primaryIds[2] = publisherId;
+		return primaryIds;
 	}
-	
+
 	public static Book deleteBook(int id) {
 		Book deletedBook = null;
 		try {
@@ -55,34 +55,37 @@ public class BookService {
 		return deletedBook;
 	}
 	
-	public static boolean updateBook(Book newBook) {
+	public static boolean[] updateBook(Book newBook) {
+		boolean returnValues[] = new boolean[3];
+		for(int i = 0; i < returnValues.length; i++)
+			returnValues[i] = true;
+		
 		BookDaoImpl bookDao = new BookDaoImpl();
 		Book oldBook = null;
-		try {
-			oldBook = bookDao.find(newBook.getId());
-		} catch (IOException e) {
-			e.printStackTrace();
+		oldBook = BookService.findBook(newBook.getId());
+		
+		if(oldBook.getAuthorId() != newBook.getAuthorId()) {
+			Author newAuthor = AuthorService.findAuthor(newBook.getAuthorId());
+			if(newAuthor == null) {
+				returnValues[1] = false;
+			}
+		}
+		
+		if(oldBook.getPublisherId() != newBook.getPublisherId()) {
+			Publisher newPublisher = PublisherService.findPublisher(newBook.getPublisherId());
+			if(newPublisher == null) {
+				returnValues[2] = false;
+			}
 		}
 		
 		try {
-			if(oldBook.getAuthorId() != newBook.getAuthorId()) {
-				Author newAuthor = new AuthorDaoImpl().find(newBook.getAuthorId());
-				if(newAuthor == null) {
-					return false;
-				}
-			}
-			
-			if(oldBook.getPublisherId() != newBook.getPublisherId()) {
-				Publisher newPublisher = new PublisherDaoImpl().find(newBook.getPublisherId());
-				if(newPublisher == null) {
-					return false;
-				}
-			}
 			bookDao.update(newBook);
-			return true;
-		} catch (Exception e) {
-			return false;
+			returnValues[0] = true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			returnValues[0] = false;
 		}
+		return returnValues;
 	}
 	
 	public static Book findBook(int id) {
