@@ -55,8 +55,11 @@ public class BookService {
 		return deletedBook;
 	}
 	
+	// in int[] [0] is whether it updated with no errors, [1] is whether AuthorId exists, [2] is whether 
+	// publisherId exists, [3] is if the bookId does not exit
 	public static boolean[] updateBook(Book newBook) {
-		boolean returnValues[] = new boolean[3];
+		boolean returnValues[] = new boolean[4];
+		
 		for(int i = 0; i < returnValues.length; i++)
 			returnValues[i] = true;
 		
@@ -64,30 +67,39 @@ public class BookService {
 		Book oldBook = null;
 		oldBook = BookService.findBook(newBook.getId());
 		
-		if(oldBook.getAuthorId() != newBook.getAuthorId()) {
-			Author newAuthor = AuthorService.findAuthor(newBook.getAuthorId());
-			if(newAuthor == null) {
-				returnValues[1] = false;
+		if(oldBook != null) {
+			if(oldBook.getAuthorId() != newBook.getAuthorId()) {
+				Author newAuthor = AuthorService.findAuthor(newBook.getAuthorId());
+				if(newAuthor == null) {
+					returnValues[1] = false;
+				}
 			}
-		}
-		
-		if(oldBook.getPublisherId() != newBook.getPublisherId()) {
-			Publisher newPublisher = PublisherService.findPublisher(newBook.getPublisherId());
-			if(newPublisher == null) {
-				returnValues[2] = false;
+			
+			if(oldBook.getPublisherId() != newBook.getPublisherId()) {
+				Publisher newPublisher = PublisherService.findPublisher(newBook.getPublisherId());
+				if(newPublisher == null) {
+					returnValues[2] = false;
+				}
 			}
-		}
-		
-		if(returnValues[1] && returnValues[2]) {
-			try {
-				bookDao.update(newBook);
-				returnValues[0] = true;
-			} catch (IOException e) {
-				e.printStackTrace();
+			
+			if(returnValues[1] && returnValues[2]) {
+				try {
+					bookDao.update(newBook);
+					returnValues[0] = true;
+				} catch (IOException e) {
+					// WARNING: it might silently die! because it does not return anything
+					e.printStackTrace();
+					returnValues[0] = false;
+				}
+			} else {
 				returnValues[0] = false;
 			}
+			
 		} else {
 			returnValues[0] = false;
+			returnValues[1] = false;
+			returnValues[2] = false;
+			returnValues[3] = false;
 		}
 		return returnValues;
 	}

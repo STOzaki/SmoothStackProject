@@ -196,20 +196,24 @@ public class UserInterface {
 				
 				Book updatedAuthor = new Book(bookId, updateList.get(0), authorId, publisherId);
 				boolean[] results = BookService.updateBook(updatedAuthor);
-				if(!results[0]) {
-					System.out.println("Book failed to update.");
-				}
-				
-				if(!results[1]) {
-					System.out.println("The provided Author Id does not exist.");
-				}
-				
-				if(!results[2]) {
-					System.out.println("The provided Publisher Id does not exist");
-				}
-				
-				if(results[0] && results[1] && results[2]) {
-					System.out.println("Book updated successfully");
+				if(!results[3]) {
+					System.out.println("BookId does not exist!");
+				} else {
+					if(!results[0]) {
+						System.out.println("Book failed to update.");
+					}
+					
+					if(!results[1]) {
+						System.out.println("The provided Author Id does not exist.");
+					}
+					
+					if(!results[2]) {
+						System.out.println("The provided Publisher Id does not exist");
+					}
+					
+					if(results[0] && results[1] && results[2] && results[3]) {
+						System.out.println("Book updated successfully");
+					}
 				}
 				break;
 			case 4:

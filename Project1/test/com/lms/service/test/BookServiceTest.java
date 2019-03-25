@@ -117,7 +117,7 @@ public class BookServiceTest {
 		boolean[] booleanList = BookService.updateBook(book);
 		Book updatedBook = bookDao.find(newBookId);
 		
-		assertTrue(booleanList[0] && booleanList[1] && booleanList[2]);
+		assertTrue(booleanList[0] && booleanList[1] && booleanList[2] && booleanList[3]);
 		
 		assertEquals(updatedBook.getId(), book.getId());
 		assertTrue(updatedBook.getTitle().equals(book.getTitle()));
@@ -134,6 +134,7 @@ public class BookServiceTest {
 		assertFalse(booleanList[0]);
 		assertFalse(booleanList[1]);
 		assertTrue(booleanList[2]);
+		assertTrue(booleanList[3]);
 	}
 	
 	@DisplayName("Return false and update should fail without an Publisher")
@@ -145,6 +146,16 @@ public class BookServiceTest {
 		assertFalse(booleanList[0]);
 		assertTrue(booleanList[1]);
 		assertFalse(booleanList[2]);
+		assertTrue(booleanList[3]);
+	}
+	
+	@DisplayName("Returns all false if the id is incorrect!")
+	@Test
+	public void updateBookWithWrongBookId() throws FileNotFoundException, IOException {
+		Book book = new Book(Integer.MAX_VALUE, "The Chronicles of Narnia", authorId, publisherId);
+		boolean[] booleanList = BookService.updateBook(book);
+		
+		assertFalse(booleanList[0] || booleanList[1] || booleanList[2] || booleanList[3]);
 	}
 
 	@Test
