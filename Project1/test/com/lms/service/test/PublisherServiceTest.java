@@ -1,6 +1,7 @@
 package com.lms.service.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -88,12 +89,27 @@ public class PublisherServiceTest {
 	@Test
 	public void updatePublisherTest() throws FileNotFoundException, IOException {
 		Publisher publisher = new Publisher(newPublisherId, "publisher the 2nd", "456 S Washington ct, Valley Way, IL 12345", "9876543210");
-		PublisherService.updatePublisher(publisher);
+		boolean updateCompleted = PublisherService.updatePublisher(publisher);
 		Publisher updatedPublisher = publisherDao.find(newPublisherId);
+		
+		assertTrue(updateCompleted);
 		assertEquals(updatedPublisher.getId(), publisher.getId());
 		assertTrue(updatedPublisher.getPublisherName().equals(publisher.getPublisherName()));
 		assertTrue(updatedPublisher.getPublisherAddress().equals(publisher.getPublisherAddress()));
 		assertTrue(updatedPublisher.getPublisherPhone().equals(publisher.getPublisherPhone()));
+	}
+	
+	@DisplayName("Does not update correctly because there is no such Author Id")
+	@Test
+	public void updateWithNoPublisherIdTest() throws FileNotFoundException, IOException {
+		int nonExistingPublisherId = Integer.MAX_VALUE;
+		
+		Publisher publisher = new Publisher(nonExistingPublisherId, "publisher the 2nd", "456 S Washington ct, Valley Way, IL 12345", "9876543210");
+		boolean updateCompleted = PublisherService.updatePublisher(publisher);
+		Publisher updatedPublisher = publisherDao.find(nonExistingPublisherId);
+
+		assertFalse(updateCompleted);
+		assertNull(updatedPublisher);
 	}
 	
 	@Test

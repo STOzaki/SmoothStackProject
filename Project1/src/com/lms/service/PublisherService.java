@@ -63,12 +63,19 @@ public class PublisherService {
 		return deletedPublisher;
 	}
 	
-	public static void updatePublisher(Publisher author) {
-		try {
-			new PublisherDaoImpl().update(author);
-		} catch (IOException e) {
-			e.printStackTrace();
+	public static boolean updatePublisher(Publisher publisher) {
+		boolean updatedCompleted = false;
+		
+		Publisher oldPublisher = PublisherService.findPublisher(publisher.getId());
+		if(oldPublisher != null) {
+			try {
+				new PublisherDaoImpl().update(publisher);
+				updatedCompleted = true;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		return updatedCompleted;
 	}
 	
 	public static Publisher findPublisher(int id) {

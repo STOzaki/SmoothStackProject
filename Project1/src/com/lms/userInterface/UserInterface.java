@@ -109,7 +109,7 @@ public class UserInterface {
 				if(authorUpdateCompleted) {
 					System.out.println("Completed Author Update Successfully");
 				} else {
-					System.out.println("Either the Author Id was incorrect or an Error occurred");
+					System.out.println("ERROR: Either the Author Id was incorrect or an Error occurred");
 				}
 				break;
 			case 4:
@@ -266,7 +266,12 @@ public class UserInterface {
 				userInput.nextLine();
 				List<String> updateList = updateInfo(userInput, publisherOptions);
 				Publisher updatedPublisher = new Publisher(publisherId, updateList.get(0), updateList.get(1), updateList.get(2));
-				PublisherService.updatePublisher(updatedPublisher);
+				boolean publisherUpdateCompleted = PublisherService.updatePublisher(updatedPublisher);
+				if(publisherUpdateCompleted) {
+					System.out.println("Completed Publisher Update Successfully");
+				} else {
+					System.out.println("ERROR: Either the Publisher Id was incorrect or an Error occurred");
+				}
 				break;
 			case 4:
 				// Publisher find
