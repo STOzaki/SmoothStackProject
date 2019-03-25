@@ -22,8 +22,7 @@ public class UserInterface {
 	private static int whichOperation(Scanner userInput) {
 		System.out.println("What would you like to do with the database?");
 		iterateOptions(operationOptions);
-		int choice = userInput.nextInt();
-		userInput.nextLine();
+		int choice = validId(userInput);
 		return choice;
 	}
 	
@@ -45,8 +44,7 @@ public class UserInterface {
 	
 	private static int promptForId(Scanner userInput, String method) {
 		System.out.println("What is the Id of the entry you are trying to " + method + "?");
-		int choice = userInput.nextInt();
-		userInput.nextLine();
+		int choice = validId(userInput);
 		return choice;
 	}
 	
@@ -59,13 +57,26 @@ public class UserInterface {
 		return returnInfo;
 	}
 	
+	private static int validId(Scanner userInput) {
+		boolean validId = false;
+		int yourChoice = -1;
+		while(!validId) {
+			try {
+				yourChoice = Integer.parseInt(userInput.nextLine());
+				validId = true;
+			} catch(NumberFormatException e) {
+				System.out.println("That is not a number.");
+			}
+		}
+		return yourChoice;
+	}
+	
 	public static void main(String[] args) {
 		Scanner userInput = new Scanner(System.in);
 		System.out.println("Which database would you like to use?");
 		iterateOptions(dataBases);
 
-		int dataChoice = userInput.nextInt();
-		userInput.nextLine();
+		int dataChoice = validId(userInput);
 		int operation = -1;
 		List<String> info = new ArrayList<>();
 		switch (dataChoice) {
@@ -91,8 +102,7 @@ public class UserInterface {
 			case 3:
 				// Author update
 				System.out.println("What is the Author Id that you would like to update?");
-				int authorId = userInput.nextInt();
-				userInput.nextLine();
+				int authorId = validId(userInput);
 				List<String> updateList = updateInfo(userInput, authorOptions);
 				Author updatedAuthor = new Author(authorId, updateList.get(0));
 				AuthorService.updateAuthor(updatedAuthor);
@@ -140,8 +150,7 @@ public class UserInterface {
 			case 3:
 				// Book Update
 				System.out.println("What is the Book Id that you would like to update?");
-				int bookId = userInput.nextInt();
-				userInput.nextLine();
+				int bookId = validId(userInput);
 				List<String> updateList = updateInfo(userInput, authorOptions);
 				
 				int authorId = -1;
@@ -212,7 +221,7 @@ public class UserInterface {
 			case 3:
 				// Publisher Update
 				System.out.println("What is the Publisher Id that you would like to update?");
-				int publisherId = userInput.nextInt();
+				int publisherId = validId(userInput);
 				userInput.nextLine();
 				List<String> updateList = updateInfo(userInput, publisherOptions);
 				Publisher updatedPublisher = new Publisher(publisherId, updateList.get(0), updateList.get(1), updateList.get(2));
