@@ -1,6 +1,8 @@
 package com.lms.dao.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -77,5 +79,22 @@ public class BookDaoTest {
 		assertTrue(newBook.getTitle().equals(newUpdate.getTitle()));
 		assertEquals(newBook.getAuthorId(), (newUpdate.getAuthorId()));
 		assertEquals(newBook.getPublisherId(), newBook.getPublisherId());
+	}
+	
+	@DisplayName("Book: Update only non empty parts or non -1 update, but empty or -1 parts do not update")
+	@Test
+	public void partialUpdateBookTest() throws FileNotFoundException, IOException {
+		Book partialUpdate = new Book(newBookId, "", -1, -1);
+		bookDaoIml.update(partialUpdate);
+		Book newBook = bookDaoIml.find(newBookId);
+		assertEquals(newBook.getId(), partialUpdate.getId());
+		assertFalse(newBook.getTitle().equals(partialUpdate.getTitle()));
+		assertNotEquals(newBook.getAuthorId(), partialUpdate.getAuthorId());
+		assertNotEquals(newBook.getPublisherId(), partialUpdate.getPublisherId());
+		
+
+		assertTrue(newBook.getTitle().equals(book.getTitle()));
+		assertEquals(newBook.getAuthorId(), (book.getAuthorId()));
+		assertEquals(newBook.getPublisherId(), book.getPublisherId());
 	}
 }

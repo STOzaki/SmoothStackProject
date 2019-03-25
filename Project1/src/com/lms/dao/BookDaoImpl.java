@@ -89,7 +89,7 @@ public class BookDaoImpl implements BookDao{
 	public void update(Book book) throws FileNotFoundException, IOException {
 		// WARNING This does not account for if the id does not exist
 		// WARNING also does not account for if the publisher and author get change and do not exist
-		// WARNING also you dont know if it worked or not
+		// WARNING also you don't know if it worked or not
 		FileReader fr = new FileReader(FILELOCATION);
 		BufferedReader br = new BufferedReader(fr);
 		
@@ -100,9 +100,28 @@ public class BookDaoImpl implements BookDao{
 			String[] splitArray = currentLine.split(REGEX);
 			int entryId = Integer.parseInt(splitArray[0]);
 			
+			String title = "";
+			int authorId = -1;
+			int publisherId = -1;
 			if(entryId == book.getId()) {
-				String newEntry = book.getId() + REGEX + book.getTitle() + 
-						REGEX + book.getAuthorId() + REGEX + book.getPublisherId();
+				if(!book.getTitle().isEmpty()) {
+					title = book.getTitle();
+				} else {
+					title = splitArray[1];
+				}
+				
+				if(book.getAuthorId() != -1) {
+					authorId = book.getAuthorId();
+				} else {
+					authorId = Integer.parseInt(splitArray[2]);
+				}
+				
+				if(book.getPublisherId() != -1) {
+					publisherId = book.getPublisherId();
+				} else {
+					publisherId = Integer.parseInt(splitArray[3]);
+				}
+				String newEntry = book.getId() + REGEX + title + REGEX + authorId + REGEX + publisherId;
 				newEntries.add(newEntry);
 			} else {
 				newEntries.add(currentLine);
