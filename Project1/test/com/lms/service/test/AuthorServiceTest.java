@@ -1,6 +1,7 @@
 package com.lms.service.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -84,10 +85,25 @@ public class AuthorServiceTest {
 	@Test
 	public void updateAuthorTest() throws FileNotFoundException, IOException {
 		Author author = new Author(newAuthorId, "test 2");
-		AuthorService.updateAuthor(author);
+		boolean updateCompleted = AuthorService.updateAuthor(author);
 		Author updatedAuthor = authorDao.find(newAuthorId);
+		
+		assertTrue(updateCompleted);
 		assertEquals(updatedAuthor.getId(), author.getId());
 		assertTrue(updatedAuthor.getAuthorName().equals(author.getAuthorName()));
+	}
+	
+	@DisplayName("Does not update correctly because there is no such Author Id")
+	@Test
+	public void updateWithNoAuthorIdTest() throws FileNotFoundException, IOException {
+		int nonExistingAuthorId = Integer.MAX_VALUE;
+		Author author = new Author(nonExistingAuthorId, "test 2");
+		boolean updateCompleted = AuthorService.updateAuthor(author);
+
+		Author updatedAuthor = authorDao.find(nonExistingAuthorId);
+		
+		assertFalse(updateCompleted);
+		assertNull(updatedAuthor);
 	}
 	
 	@Test

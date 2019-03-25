@@ -62,12 +62,19 @@ public class AuthorService {
 		return deletedAuthor;
 	}
 	
-	public static void updateAuthor(Author author) {
-		try {
-			new AuthorDaoImpl().update(author);
-		} catch (IOException e) {
-			e.printStackTrace();
+	public static boolean updateAuthor(Author author) {
+		boolean updateComplete = false;
+		
+		Author oldAuthor = AuthorService.findAuthor(author.getId());
+		if(oldAuthor != null) {
+			try {
+				new AuthorDaoImpl().update(author);
+				updateComplete = true;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		return updateComplete;
 	}
 	
 	public static Author findAuthor(int id) {

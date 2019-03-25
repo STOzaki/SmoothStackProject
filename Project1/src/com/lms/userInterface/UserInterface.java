@@ -105,7 +105,12 @@ public class UserInterface {
 				int authorId = validId(userInput);
 				List<String> updateList = updateInfo(userInput, authorOptions);
 				Author updatedAuthor = new Author(authorId, updateList.get(0));
-				AuthorService.updateAuthor(updatedAuthor);
+				boolean authorUpdateCompleted = AuthorService.updateAuthor(updatedAuthor);
+				if(authorUpdateCompleted) {
+					System.out.println("Completed Author Update Successfully");
+				} else {
+					System.out.println("Either the Author Id was incorrect or an Error occurred");
+				}
 				break;
 			case 4:
 				// Author find
@@ -163,7 +168,7 @@ public class UserInterface {
 				}
 				break;
 			case 3:
-				// Book Update
+				// Book update
 				System.out.println("What is the Book Id that you would like to update?");
 				int bookId = validId(userInput);
 
@@ -255,7 +260,7 @@ public class UserInterface {
 				}
 				break;
 			case 3:
-				// Publisher Update
+				// Publisher update
 				System.out.println("What is the Publisher Id that you would like to update?");
 				int publisherId = validId(userInput);
 				userInput.nextLine();
