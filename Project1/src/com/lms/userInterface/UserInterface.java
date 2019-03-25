@@ -22,14 +22,17 @@ public class UserInterface {
 	private static int whichOperation(Scanner userInput) {
 		System.out.println("What would you like to do with the database?");
 		iterateOptions(operationOptions);
-		return userInput.nextInt();
+		int choice = userInput.nextInt();
+		userInput.nextLine();
+		return choice;
 	}
 	
 	private static List<String> infoGathering(Scanner userInput, String[] list) {
 		List<String> returnInfo = new ArrayList<>();
 		for(int i = 0; i < list.length; i++) {
 			System.out.println("What is the " + list[i] + "?");
-			returnInfo.add(userInput.next());
+			String response = userInput.nextLine();
+			returnInfo.add(response);
 		}
 		return returnInfo;
 	}
@@ -42,14 +45,16 @@ public class UserInterface {
 	
 	private static int promptForId(Scanner userInput, String method) {
 		System.out.println("What is the Id of the entry you are trying to " + method + "?");
-		return userInput.nextInt();
+		int choice = userInput.nextInt();
+		userInput.nextLine();
+		return choice;
 	}
 	
 	private static List<String> updateInfo(Scanner userInput, String[] list) {
 		List<String> returnInfo = new ArrayList<>();
 		for(int i = 0; i < list.length; i++) {
 			System.out.println("What would you like " + list[i] + " to be updated to? (hit enter to skip)");
-			returnInfo.add(userInput.next());
+			returnInfo.add(userInput.nextLine());
 		}
 		return returnInfo;
 	}
@@ -60,6 +65,7 @@ public class UserInterface {
 		iterateOptions(dataBases);
 
 		int dataChoice = userInput.nextInt();
+		userInput.nextLine();
 		int operation = -1;
 		List<String> info = new ArrayList<>();
 		switch (dataChoice) {
@@ -86,6 +92,7 @@ public class UserInterface {
 				// Author update
 				System.out.println("What is the Author Id that you would like to update?");
 				int authorId = userInput.nextInt();
+				userInput.nextLine();
 				List<String> updateList = updateInfo(userInput, authorOptions);
 				Author updatedAuthor = new Author(authorId, updateList.get(0));
 				AuthorService.updateAuthor(updatedAuthor);
@@ -118,7 +125,7 @@ public class UserInterface {
 				int[] ids = BookService.saveBook(info.get(0), Integer.parseInt(info.get(1)), Integer.parseInt(info.get(2)));
 				System.out.println("This is the BookID associated with your entry: " + ids[0]);
 				System.out.println("BookId: " + ids[1]);
-				System.out.println("PublisherId" + ids[2]);
+				System.out.println("PublisherId: " + ids[2]);
 				break;
 			case 2:
 				// Book delete
@@ -134,6 +141,7 @@ public class UserInterface {
 				// Book Update
 				System.out.println("What is the Book Id that you would like to update?");
 				int bookId = userInput.nextInt();
+				userInput.nextLine();
 				List<String> updateList = updateInfo(userInput, authorOptions);
 				
 				int authorId = -1;
@@ -205,6 +213,7 @@ public class UserInterface {
 				// Publisher Update
 				System.out.println("What is the Publisher Id that you would like to update?");
 				int publisherId = userInput.nextInt();
+				userInput.nextLine();
 				List<String> updateList = updateInfo(userInput, publisherOptions);
 				Publisher updatedPublisher = new Publisher(publisherId, updateList.get(0), updateList.get(1), updateList.get(2));
 				PublisherService.updatePublisher(updatedPublisher);
@@ -220,8 +229,8 @@ public class UserInterface {
 				break;
 			case 5:
 				// Publisher findAll
-				List<Book> allBooks = BookService.findAllBooks();
-				allBooks.parallelStream().forEach(a -> System.out.println(a.toString()));
+				List<Publisher> allPublishers = PublisherService.findAllPublishers();
+				allPublishers.parallelStream().forEach(a -> System.out.println(a.toString()));
 				break;
 			default:
 				System.out.println("No such operation.");
