@@ -15,7 +15,8 @@ import org.junit.jupiter.api.Test;
 import com.lms.model.Publisher;
 
 import com.lms.dao.PublisherDaoImpl;
-
+import com.lms.service.AuthorService;
+import com.lms.service.BookService;
 import com.lms.service.PublisherService;
 
 public class PublisherServiceTest {
@@ -23,8 +24,15 @@ public class PublisherServiceTest {
 	private String publisherName = "Tester T. Testing";
 	private String publisherAddress = "123 E Franklin Ave, South Keep IL, 56498";
 	private String publisherPhone = "1234567890";
+	
+	private String authorName = "Tester T. Testing";
+
+	private static String title = "Test Title";
+	
 	private PublisherDaoImpl publisherDao;
 	int newPublisherId;
+	int newAuthorId;
+	int newBookId;
 	
 	@BeforeEach
 	void init() throws FileNotFoundException, IOException {
@@ -53,13 +61,27 @@ public class PublisherServiceTest {
 		assertTrue(publisherDao.find(newPublisherId).getPublisherPhone().equals(publisherPhone));
 	}
 	
+	@DisplayName("Deleting an Publisher will also delete the associated book(s)")
 	@Test
 	public void deletePublisherTest() throws FileNotFoundException, IOException {
-		int previousSize = publisherDao.findAll().size();
+		newAuthorId = AuthorService.saveAuthor(authorName);
+		int[] primaryIds = BookService.saveBook(title, newAuthorId, newPublisherId);
+		
+		int previousBookSize = BookService.findAllBooks().size();
+		int previousPublisherSize = publisherDao.findAll().size();
+		
 		PublisherService.deletePublisher(newPublisherId);
-		int currentSize = publisherDao.findAll().size();
-		assertTrue(previousSize > currentSize);
+		
+		int currentBookSize = BookService.findAllBooks().size();
+		int currentPublisherSize = publisherDao.findAll().size();
+		assertTrue(previousBookSize > currentBookSize);
+		assertTrue(previousPublisherSize > currentPublisherSize);
 		assertNull(publisherDao.find(newPublisherId));
+		
+		// clean up
+		AuthorService.deleteAuthor(primaryIds[1]);
+		BookService.deleteBook(primaryIds[0]);
+		newPublisherId = primaryIds[2];
 	}
 	
 	@DisplayName("Will update correct")

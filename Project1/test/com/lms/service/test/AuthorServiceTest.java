@@ -16,11 +16,22 @@ import com.lms.dao.AuthorDaoImpl;
 import com.lms.model.Author;
 
 import com.lms.service.AuthorService;
+import com.lms.service.PublisherService;
+import com.lms.service.BookService;;
 
 public class AuthorServiceTest {
 	private String authorName = "Tester T. Testing";
+	
+	private static String publisherName = "Tester T. Testing";
+	private static String publisherAddress = "123 E Franklin Ave, South Keep IL, 56498";
+	private static String publisherPhone = "1234567890";
+	
+	private static String title = "Test Title";
+	
 	private AuthorDaoImpl authorDao;
 	int newAuthorId;
+	int newPublisherId;
+	int newBookId;
 	
 	@BeforeEach
 	void init() throws FileNotFoundException, IOException {
@@ -46,13 +57,27 @@ public class AuthorServiceTest {
 		assertTrue(authorDao.find(newAuthorId).getAuthorName().equals(authorName));
 	}
 	
+	@DisplayName("Deleting an Author will also delete the associated book(s)")
 	@Test
 	public void deleteAuthorTest() throws FileNotFoundException, IOException {
-		int previousSize = authorDao.findAll().size();
+		newPublisherId = PublisherService.savePublisher(publisherName, publisherAddress, publisherPhone);
+		int[] primaryIds = BookService.saveBook(title, newAuthorId, newPublisherId);
+		
+		int previousBookSize = BookService.findAllBooks().size();
+		int previousAuthorSize = authorDao.findAll().size();
+		
 		AuthorService.deleteAuthor(newAuthorId);
-		int currentSize = authorDao.findAll().size();
-		assertTrue(previousSize > currentSize);
+		
+		int currentBookSize = BookService.findAllBooks().size();
+		int currentAuthorSize = authorDao.findAll().size();
+		assertTrue(previousAuthorSize > currentAuthorSize);
+		assertTrue(previousBookSize > currentBookSize);
 		assertNull(authorDao.find(newAuthorId));
+		
+		// clean up
+		PublisherService.deletePublisher(primaryIds[2]);
+		BookService.deleteBook(primaryIds[0]);
+		newAuthorId = primaryIds[1];
 	}
 	
 	@DisplayName("Will update correct")
