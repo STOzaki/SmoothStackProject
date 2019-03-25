@@ -78,11 +78,15 @@ public class BookService {
 			}
 		}
 		
-		try {
-			bookDao.update(newBook);
-			returnValues[0] = true;
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(returnValues[1] && returnValues[2]) {
+			try {
+				bookDao.update(newBook);
+				returnValues[0] = true;
+			} catch (IOException e) {
+				e.printStackTrace();
+				returnValues[0] = false;
+			}
+		} else {
 			returnValues[0] = false;
 		}
 		return returnValues;

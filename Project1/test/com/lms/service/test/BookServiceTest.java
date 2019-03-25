@@ -125,24 +125,24 @@ public class BookServiceTest {
 		assertEquals(updatedBook.getPublisherId(), book.getPublisherId());
 	}
 	
-	@DisplayName("Return false for Author")
+	@DisplayName("Return false and update should fail without an Author")
 	@Test
 	public void updateBookWithNoAuthor() throws FileNotFoundException, IOException {
 		Book book = new Book(newBookId, "The Chronicles of Narnia", Integer.MAX_VALUE, publisherId);
 		boolean[] booleanList = BookService.updateBook(book);
 		
-		assertTrue(booleanList[0]);
+		assertFalse(booleanList[0]);
 		assertFalse(booleanList[1]);
 		assertTrue(booleanList[2]);
 	}
 	
-	@DisplayName("Return false for Publisher")
+	@DisplayName("Return false and update should fail without an Publisher")
 	@Test
 	public void updateBookWithNoPublisher() throws FileNotFoundException, IOException {
 		Book book = new Book(newBookId, "The Chronicles of Narnia", authorId, Integer.MAX_VALUE);
 		boolean[] booleanList = BookService.updateBook(book);
 		
-		assertTrue(booleanList[0]);
+		assertFalse(booleanList[0]);
 		assertTrue(booleanList[1]);
 		assertFalse(booleanList[2]);
 	}
