@@ -35,5 +35,10 @@ public final class Publisher extends POJO {
 	public void setPublisherPhone(String publisherPhone) {
 		this.publisherPhone = publisherPhone;
 	}
+	
+	@Override
+	public String toString() {
+		return "Publisher Name: " + this.publisherName + ", Publisher Address: " + this.publisherAddress + ", Publisher Phone: " + this.publisherPhone;
+	}
 
 }

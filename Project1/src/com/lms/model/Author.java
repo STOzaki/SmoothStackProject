@@ -15,5 +15,10 @@ public final class Author extends POJO{
 	public void setAuthorName(String authorName) {
 		this.authorName = authorName;
 	}
+	
+	@Override
+	public String toString() {
+		return "Author Name: " + this.authorName;
+	}
 
 }

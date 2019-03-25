@@ -36,5 +36,9 @@ public final class Book extends POJO {
 		this.publisherId = publisherId;
 	}
 
+	@Override
+	public String toString() {
+		return "Book Name: " + this.title + ", AuthorId: " + this.authorId + ", PublisherId: " + this.publisherId;
+	}
 
 }
