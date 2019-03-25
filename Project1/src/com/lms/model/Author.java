@@ -18,7 +18,7 @@ public final class Author extends POJO{
 	
 	@Override
 	public String toString() {
-		return "Author Name: " + this.authorName;
+		return "id: " + this.getId() + "Author Name: " + this.authorName;
 	}
 
 }
