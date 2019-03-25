@@ -1,6 +1,7 @@
 package com.lms.dao.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -77,5 +78,23 @@ public class PublisherDaoTest {
 		assertTrue(newPublisher.getPublisherName().equals(newUpdate.getPublisherName()));
 		assertTrue(newPublisher.getPublisherAddress().equals(newUpdate.getPublisherAddress()));
 		assertTrue(newPublisher.getPublisherPhone().equals(newUpdate.getPublisherPhone()));
+	}
+	
+	@DisplayName("Publisher: Update only non empty parts update, but empty parts do not update")
+	@Test
+	public void updatePartialPublisherTest() throws FileNotFoundException, IOException {
+		Publisher partialUpdate = new Publisher(newPublisherId, "", "", "");
+		publisherDaoIml.update(partialUpdate);
+		Publisher newPublisher = publisherDaoIml.find(newPublisherId);
+		assertEquals(newPublisher.getId(), partialUpdate.getId());
+		assertFalse(newPublisher.getPublisherName().equals(partialUpdate.getPublisherName()));
+		assertFalse(newPublisher.getPublisherAddress().equals(partialUpdate.getPublisherAddress()));
+		assertFalse(newPublisher.getPublisherPhone().equals(partialUpdate.getPublisherPhone()));
+		
+
+		assertTrue(newPublisher.getPublisherName().equals(publisher.getPublisherName()));
+		assertTrue(newPublisher.getPublisherAddress().equals(publisher.getPublisherAddress()));
+		assertTrue(newPublisher.getPublisherPhone().equals(publisher.getPublisherPhone()));
+		
 	}
 }

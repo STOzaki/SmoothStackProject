@@ -91,9 +91,29 @@ public class PublisherDaoImpl implements PublisherDao{
 			String[] splitArray = currentLine.split(REGEX);
 			int entryId = Integer.parseInt(splitArray[0]);
 			
+			String publisherName = "";
+			String publisherAddress = "";
+			String publisherPhone = "";
 			if(entryId == publisher.getId()) {
-				String newEntry = publisher.getId() + REGEX + publisher.getPublisherName() + 
-						REGEX + publisher.getPublisherAddress() + REGEX + publisher.getPublisherPhone();
+				if(!publisher.getPublisherName().isEmpty()) {
+					publisherName = publisher.getPublisherName();
+				} else {
+					publisherName = splitArray[1];
+				}
+				
+				if(!publisher.getPublisherAddress().isEmpty()) {
+					publisherAddress = publisher.getPublisherAddress();
+				} else {
+					publisherAddress = splitArray[2];
+				}
+				
+				if(!publisher.getPublisherPhone().isEmpty()) {
+					publisherPhone = publisher.getPublisherPhone();
+				} else {
+					publisherPhone = splitArray[3];
+				}
+				String newEntry = publisher.getId() + REGEX + publisherName + 
+						REGEX + publisherAddress + REGEX + publisherPhone;
 				newEntries.add(newEntry);
 			} else {
 				newEntries.add(currentLine);
