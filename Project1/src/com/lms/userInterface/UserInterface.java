@@ -132,14 +132,14 @@ public class UserInterface {
 			case 1:
 				// Book save
 				info = infoGathering(userInput, bookOptions);
-				boolean validInput = false;
+				boolean validInputSave = false;
 				int newAuthorId = -1;
 				int newPublisherId = -1;
-				while(!validInput) {
+				while(!validInputSave) {
 					try {
 						newAuthorId = Integer.parseInt(info.get(1));
 						newPublisherId = Integer.parseInt(info.get(2));
-						validInput = true;
+						validInputSave = true;
 					} catch (NumberFormatException e) {
 						newAuthorId = -1;
 						newPublisherId = -1;
@@ -166,17 +166,34 @@ public class UserInterface {
 				// Book Update
 				System.out.println("What is the Book Id that you would like to update?");
 				int bookId = validId(userInput);
-				List<String> updateList = updateInfo(userInput, authorOptions);
-				
+
+				boolean validInputUpdateAuthor = false;
+				boolean validInputUpdatePublisher = false;
 				int authorId = -1;
 				int publisherId = -1;
-				if(!updateList.get(1).isEmpty()) {
-					authorId = Integer.parseInt(updateList.get(1));
+				List<String> updateList = null;
+				
+				while(!validInputUpdateAuthor && !validInputUpdatePublisher) {
+					updateList = updateInfo(userInput, bookOptions);
+					if(!updateList.get(1).isEmpty()) {
+						try {
+							authorId = Integer.parseInt(updateList.get(1));
+							validInputUpdateAuthor = true;
+						} catch (NumberFormatException e) {
+							System.out.println("I am sorry that AuthorId is not a number.");
+						}
+					}
+					
+					if(!updateList.get(2).isEmpty()) {
+						try {
+							publisherId = Integer.parseInt(updateList.get(2));
+							validInputUpdatePublisher = true;
+						} catch (NumberFormatException e) {
+							System.out.println("I am sorry that PublisherId is not a number.");
+						}
+					}
 				}
 				
-				if(!updateList.get(2).isEmpty()) {
-					publisherId = Integer.parseInt(updateList.get(2));
-				}
 				Book updatedAuthor = new Book(bookId, updateList.get(0), authorId, publisherId);
 				boolean[] results = BookService.updateBook(updatedAuthor);
 				if(!results[0]) {
