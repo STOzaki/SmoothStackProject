@@ -133,11 +133,20 @@ public class UserInterface {
 			case 3:
 				// Book Update
 				System.out.println("What is the Book Id that you would like to update?");
-				int authorId = userInput.nextInt();
+				int bookId = userInput.nextInt();
 				List<String> updateList = updateInfo(userInput, authorOptions);
-				Book updatedauthor = new Book(authorId, updateList.get(0), Integer.parseInt(updateList.get(0)),
-						Integer.parseInt(updateList.get(1)));
-				boolean[] results = BookService.updateBook(updatedauthor);
+				
+				int authorId = -1;
+				int publisherId = -1;
+				if(!updateList.get(1).isEmpty()) {
+					authorId = Integer.parseInt(updateList.get(1));
+				}
+				
+				if(!updateList.get(2).isEmpty()) {
+					publisherId = Integer.parseInt(updateList.get(2));
+				}
+				Book updatedAuthor = new Book(bookId, updateList.get(0), authorId, publisherId);
+				boolean[] results = BookService.updateBook(updatedAuthor);
 				if(!results[0]) {
 					System.out.println("Book failed to update.");
 				}
