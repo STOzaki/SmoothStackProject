@@ -132,7 +132,22 @@ public class UserInterface {
 			case 1:
 				// Book save
 				info = infoGathering(userInput, bookOptions);
-				int[] ids = BookService.saveBook(info.get(0), Integer.parseInt(info.get(1)), Integer.parseInt(info.get(2)));
+				boolean validInput = false;
+				int newAuthorId = -1;
+				int newPublisherId = -1;
+				while(!validInput) {
+					try {
+						newAuthorId = Integer.parseInt(info.get(1));
+						newPublisherId = Integer.parseInt(info.get(2));
+						validInput = true;
+					} catch (NumberFormatException e) {
+						newAuthorId = -1;
+						newPublisherId = -1;
+						System.out.println("I am sorry but either the AuthorId or the PublisherId is incorrect");
+						info = infoGathering(userInput, bookOptions);
+					}
+				}
+				int[] ids = BookService.saveBook(info.get(0), newAuthorId, newPublisherId);
 				System.out.println("This is the BookID associated with your entry: " + ids[0]);
 				System.out.println("BookId: " + ids[1]);
 				System.out.println("PublisherId: " + ids[2]);
