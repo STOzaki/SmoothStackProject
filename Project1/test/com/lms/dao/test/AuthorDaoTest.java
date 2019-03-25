@@ -1,6 +1,7 @@
 package com.lms.dao.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -76,5 +77,18 @@ public class AuthorDaoTest {
 		Author newauthor = authorDao.find(newAuthorId);
 		assertEquals(newauthor.getId(), newUpdate.getId());
 		assertTrue(newauthor.getAuthorName().equals(newUpdate.getAuthorName()));
+	}
+	
+	@DisplayName("Author: Update only non empty parts update, but empty parts do not update")
+	@Test
+	public void updatePartsAuthorTest() throws FileNotFoundException, IOException {
+		Author partialUpdate = new Author(newAuthorId, "");
+		authorDao.update(partialUpdate);
+		Author newAuthor = authorDao.find(newAuthorId);
+		assertEquals(newAuthor.getId(), partialUpdate.getId());
+		assertFalse(newAuthor.getAuthorName().equals(partialUpdate.getAuthorName()));
+		
+
+		assertTrue(newAuthor.getAuthorName().equals(author.getAuthorName()));
 	}
 }

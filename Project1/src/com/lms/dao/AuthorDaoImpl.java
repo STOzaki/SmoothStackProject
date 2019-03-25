@@ -78,7 +78,7 @@ public class AuthorDaoImpl implements AuthorDao{
 	// Not sure about this (maybe pass id and object and compare the object with the entry and if anything is different then update
 	@Override
 	public void update(Author author) throws FileNotFoundException, IOException {
-		// WARNING This does not account for if the id does not exist
+		// WARNING This does not account for if the id does not exist (nothing happens)
 		FileReader fr = new FileReader(FILELOCATION);
 		BufferedReader br = new BufferedReader(fr);
 		
@@ -89,8 +89,14 @@ public class AuthorDaoImpl implements AuthorDao{
 			String[] splitArray = currentLine.split(REGEX);
 			int entryId = Integer.parseInt(splitArray[0]);
 			
+			String authorName = "";
 			if(entryId == author.getId()) {
-				String newEntry = author.getId() + REGEX + author.getAuthorName();
+				if(!author.getAuthorName().isEmpty()) {
+					authorName = author.getAuthorName();
+				} else {
+					authorName = splitArray[1];
+				}
+				String newEntry = author.getId() + REGEX + authorName;
 				newEntries.add(newEntry);
 			} else {
 				newEntries.add(currentLine);
