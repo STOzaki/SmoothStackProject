@@ -71,225 +71,244 @@ public class UserInterface {
 		return yourChoice;
 	}
 	
+	private static void authorMenu(Scanner userInput) {
+
+		List<String> info = new ArrayList<>();
+		int operation = -1;
+		// Author database
+		operation = whichOperation(userInput);
+		switch (operation) {
+		case 1:
+			// Author save
+			info = infoGathering(userInput, authorOptions);
+			System.out.println("This is the AuthorID associated with your entry: " + AuthorService.saveAuthor(info.get(0)));
+			break;
+		case 2:
+			// Author delete
+			Author deletedEntry = AuthorService.deleteAuthor(promptForId(userInput, "delete"));
+			if(deletedEntry == null) {
+				System.out.println("Unfortunatly, we failed to delete that entry");
+			} else {
+				System.out.println("Successfully deleted entry: (Info about deleted entry)");
+				System.out.println(deletedEntry.toString());
+			}
+			break;
+		case 3:
+			// Author update
+			System.out.println("What is the Author Id that you would like to update?");
+			int authorId = validId(userInput);
+			List<String> updateList = updateInfo(userInput, authorOptions);
+			Author updatedAuthor = new Author(authorId, updateList.get(0));
+			boolean authorUpdateCompleted = AuthorService.updateAuthor(updatedAuthor);
+			if(authorUpdateCompleted) {
+				System.out.println("Completed Author Update Successfully");
+			} else {
+				System.out.println("ERROR: Either the Author Id was incorrect or an Error occurred");
+			}
+			break;
+		case 4:
+			// Author find
+			Author foundAuthor = AuthorService.findAuthor(promptForId(userInput, "find"));
+			if(foundAuthor == null) {
+				System.out.println("Could not locate that entry");
+			} else {
+				System.out.println(foundAuthor.toString());
+			}
+			break;
+		case 5:
+			// Author findAll
+			List<Author> allAuthors = AuthorService.findAllAuthors();
+			allAuthors.parallelStream().forEach(a -> System.out.println(a.toString()));
+			break;
+		default:
+			System.out.println("No such operation.");
+		}
+	}
+	
+	private static void bookMenu(Scanner userInput) {
+
+		List<String> info = new ArrayList<>();
+		int operation = -1;
+		// Book database
+		operation = whichOperation(userInput);
+		switch (operation) {
+		case 1:
+			// Book save
+			info = infoGathering(userInput, bookOptions);
+			boolean validInputSave = false;
+			int newAuthorId = -1;
+			int newPublisherId = -1;
+			while(!validInputSave) {
+				try {
+					newAuthorId = Integer.parseInt(info.get(1));
+					newPublisherId = Integer.parseInt(info.get(2));
+					validInputSave = true;
+				} catch (NumberFormatException e) {
+					newAuthorId = -1;
+					newPublisherId = -1;
+					System.out.println("I am sorry but either the AuthorId or the PublisherId is incorrect");
+					info = infoGathering(userInput, bookOptions);
+				}
+			}
+			int[] ids = BookService.saveBook(info.get(0), newAuthorId, newPublisherId);
+			System.out.println("This is the BookID associated with your entry: " + ids[0]);
+			System.out.println("BookId: " + ids[1]);
+			System.out.println("PublisherId: " + ids[2]);
+			break;
+		case 2:
+			// Book delete
+			Book deletedEntry = BookService.deleteBook(promptForId(userInput, "delete"));
+			if(deletedEntry == null) {
+				System.out.println("Unfortunatly, we failed to delete that entry");
+			} else {
+				System.out.println("Successfully deleted entry: (Info about deleted entry)");
+				System.out.println(deletedEntry.toString());
+			}
+			break;
+		case 3:
+			// Book update
+			System.out.println("What is the Book Id that you would like to update?");
+			int bookId = validId(userInput);
+
+			boolean validInputUpdateAuthor = false;
+			boolean validInputUpdatePublisher = false;
+			int authorId = -1;
+			int publisherId = -1;
+			List<String> updateList = null;
+			
+			while(!validInputUpdateAuthor && !validInputUpdatePublisher) {
+				updateList = updateInfo(userInput, bookOptions);
+				if(!updateList.get(1).isEmpty()) {
+					try {
+						authorId = Integer.parseInt(updateList.get(1));
+						validInputUpdateAuthor = true;
+					} catch (NumberFormatException e) {
+						System.out.println("I am sorry that AuthorId is not a number.");
+					}
+				}
+				
+				if(!updateList.get(2).isEmpty()) {
+					try {
+						publisherId = Integer.parseInt(updateList.get(2));
+						validInputUpdatePublisher = true;
+					} catch (NumberFormatException e) {
+						System.out.println("I am sorry that PublisherId is not a number.");
+					}
+				}
+			}
+			
+			Book updatedAuthor = new Book(bookId, updateList.get(0), authorId, publisherId);
+			boolean[] results = BookService.updateBook(updatedAuthor);
+			if(!results[3]) {
+				System.out.println("BookId does not exist!");
+			} else {
+				if(!results[0]) {
+					System.out.println("Book failed to update.");
+				}
+				
+				if(!results[1]) {
+					System.out.println("The provided Author Id does not exist.");
+				}
+				
+				if(!results[2]) {
+					System.out.println("The provided Publisher Id does not exist");
+				}
+				
+				if(results[0] && results[1] && results[2] && results[3]) {
+					System.out.println("Book updated successfully");
+				}
+			}
+			break;
+		case 4:
+			// Book find
+			Book foundBook = BookService.findBook(promptForId(userInput, "find"));
+			if(foundBook == null) {
+				System.out.println("Could not locate that entry");
+			} else {
+				System.out.println(foundBook.toString());
+			}
+			break;
+		case 5:
+			// Book findAll
+			List<Book> allBooks = BookService.findAllBooks();
+			allBooks.parallelStream().forEach(a -> System.out.println(a.toString()));
+			break;
+		default:
+			System.out.println("No such operation.");
+		}
+	}
+	
+	private static void publisherMenu(Scanner userInput) {
+
+		List<String> info = new ArrayList<>();
+		int operation = -1;
+		// Publisher database
+		operation = whichOperation(userInput);
+		switch (operation) {
+		case 1:
+			// Publisher save
+			info = infoGathering(userInput, publisherOptions);
+			System.out.println("This is the PublisherID associated with your entry: " + 
+					PublisherService.savePublisher(info.get(0), info.get(1), info.get(2)));
+			break;
+		case 2:
+			// Publisher delete
+			Publisher deletedEntry = PublisherService.deletePublisher(promptForId(userInput, "delete"));
+			if(deletedEntry == null) {
+				System.out.println("Unfortunatly, we failed to delete that entry");
+			} else {
+				System.out.println("Successfully deleted entry: (Info about deleted entry)");
+				System.out.println(deletedEntry.toString());
+			}
+			break;
+		case 3:
+			// Publisher update
+			System.out.println("What is the Publisher Id that you would like to update?");
+			int publisherId = validId(userInput);
+			userInput.nextLine();
+			List<String> updateList = updateInfo(userInput, publisherOptions);
+			Publisher updatedPublisher = new Publisher(publisherId, updateList.get(0), updateList.get(1), updateList.get(2));
+			boolean publisherUpdateCompleted = PublisherService.updatePublisher(updatedPublisher);
+			if(publisherUpdateCompleted) {
+				System.out.println("Completed Publisher Update Successfully");
+			} else {
+				System.out.println("ERROR: Either the Publisher Id was incorrect or an Error occurred");
+			}
+			break;
+		case 4:
+			// Publisher find
+			Publisher publisher = PublisherService.findPublisher(promptForId(userInput, "find"));
+			if(publisher == null) {
+				System.out.println("Could not locate that entry");
+			} else {
+				System.out.println(publisher.toString());
+			}
+			break;
+		case 5:
+			// Publisher findAll
+			List<Publisher> allPublishers = PublisherService.findAllPublishers();
+			allPublishers.parallelStream().forEach(a -> System.out.println(a.toString()));
+			break;
+		default:
+			System.out.println("No such operation.");
+		}
+	}
+	
 	public static void main(String[] args) {
 		Scanner userInput = new Scanner(System.in);
 		System.out.println("Which database would you like to use?");
 		iterateOptions(dataBases);
 
 		int dataChoice = validId(userInput);
-		int operation = -1;
-		List<String> info = new ArrayList<>();
 		switch (dataChoice) {
 		case 1:
-			// Author database
-			operation = whichOperation(userInput);
-			switch (operation) {
-			case 1:
-				// Author save
-				info = infoGathering(userInput, authorOptions);
-				System.out.println("This is the AuthorID associated with your entry: " + AuthorService.saveAuthor(info.get(0)));
-				break;
-			case 2:
-				// Author delete
-				Author deletedEntry = AuthorService.deleteAuthor(promptForId(userInput, "delete"));
-				if(deletedEntry == null) {
-					System.out.println("Unfortunatly, we failed to delete that entry");
-				} else {
-					System.out.println("Successfully deleted entry: (Info about deleted entry)");
-					System.out.println(deletedEntry.toString());
-				}
-				break;
-			case 3:
-				// Author update
-				System.out.println("What is the Author Id that you would like to update?");
-				int authorId = validId(userInput);
-				List<String> updateList = updateInfo(userInput, authorOptions);
-				Author updatedAuthor = new Author(authorId, updateList.get(0));
-				boolean authorUpdateCompleted = AuthorService.updateAuthor(updatedAuthor);
-				if(authorUpdateCompleted) {
-					System.out.println("Completed Author Update Successfully");
-				} else {
-					System.out.println("ERROR: Either the Author Id was incorrect or an Error occurred");
-				}
-				break;
-			case 4:
-				// Author find
-				Author foundAuthor = AuthorService.findAuthor(promptForId(userInput, "find"));
-				if(foundAuthor == null) {
-					System.out.println("Could not locate that entry");
-				} else {
-					System.out.println(foundAuthor.toString());
-				}
-				break;
-			case 5:
-				// Author findAll
-				List<Author> allAuthors = AuthorService.findAllAuthors();
-				allAuthors.parallelStream().forEach(a -> System.out.println(a.toString()));
-				break;
-			default:
-				System.out.println("No such operation.");
-			}
+			authorMenu(userInput);
 			break;
 		case 2:
-			// Book database
-			operation = whichOperation(userInput);
-			switch (operation) {
-			case 1:
-				// Book save
-				info = infoGathering(userInput, bookOptions);
-				boolean validInputSave = false;
-				int newAuthorId = -1;
-				int newPublisherId = -1;
-				while(!validInputSave) {
-					try {
-						newAuthorId = Integer.parseInt(info.get(1));
-						newPublisherId = Integer.parseInt(info.get(2));
-						validInputSave = true;
-					} catch (NumberFormatException e) {
-						newAuthorId = -1;
-						newPublisherId = -1;
-						System.out.println("I am sorry but either the AuthorId or the PublisherId is incorrect");
-						info = infoGathering(userInput, bookOptions);
-					}
-				}
-				int[] ids = BookService.saveBook(info.get(0), newAuthorId, newPublisherId);
-				System.out.println("This is the BookID associated with your entry: " + ids[0]);
-				System.out.println("BookId: " + ids[1]);
-				System.out.println("PublisherId: " + ids[2]);
-				break;
-			case 2:
-				// Book delete
-				Book deletedEntry = BookService.deleteBook(promptForId(userInput, "delete"));
-				if(deletedEntry == null) {
-					System.out.println("Unfortunatly, we failed to delete that entry");
-				} else {
-					System.out.println("Successfully deleted entry: (Info about deleted entry)");
-					System.out.println(deletedEntry.toString());
-				}
-				break;
-			case 3:
-				// Book update
-				System.out.println("What is the Book Id that you would like to update?");
-				int bookId = validId(userInput);
-
-				boolean validInputUpdateAuthor = false;
-				boolean validInputUpdatePublisher = false;
-				int authorId = -1;
-				int publisherId = -1;
-				List<String> updateList = null;
-				
-				while(!validInputUpdateAuthor && !validInputUpdatePublisher) {
-					updateList = updateInfo(userInput, bookOptions);
-					if(!updateList.get(1).isEmpty()) {
-						try {
-							authorId = Integer.parseInt(updateList.get(1));
-							validInputUpdateAuthor = true;
-						} catch (NumberFormatException e) {
-							System.out.println("I am sorry that AuthorId is not a number.");
-						}
-					}
-					
-					if(!updateList.get(2).isEmpty()) {
-						try {
-							publisherId = Integer.parseInt(updateList.get(2));
-							validInputUpdatePublisher = true;
-						} catch (NumberFormatException e) {
-							System.out.println("I am sorry that PublisherId is not a number.");
-						}
-					}
-				}
-				
-				Book updatedAuthor = new Book(bookId, updateList.get(0), authorId, publisherId);
-				boolean[] results = BookService.updateBook(updatedAuthor);
-				if(!results[3]) {
-					System.out.println("BookId does not exist!");
-				} else {
-					if(!results[0]) {
-						System.out.println("Book failed to update.");
-					}
-					
-					if(!results[1]) {
-						System.out.println("The provided Author Id does not exist.");
-					}
-					
-					if(!results[2]) {
-						System.out.println("The provided Publisher Id does not exist");
-					}
-					
-					if(results[0] && results[1] && results[2] && results[3]) {
-						System.out.println("Book updated successfully");
-					}
-				}
-				break;
-			case 4:
-				// Book find
-				Book foundBook = BookService.findBook(promptForId(userInput, "find"));
-				if(foundBook == null) {
-					System.out.println("Could not locate that entry");
-				} else {
-					System.out.println(foundBook.toString());
-				}
-				break;
-			case 5:
-				// Book findAll
-				List<Book> allBooks = BookService.findAllBooks();
-				allBooks.parallelStream().forEach(a -> System.out.println(a.toString()));
-				break;
-			default:
-				System.out.println("No such operation.");
-			}
+			bookMenu(userInput);
 			break;
 		case 3:
-			// Publisher database
-			operation = whichOperation(userInput);
-			switch (operation) {
-			case 1:
-				// Publisher save
-				info = infoGathering(userInput, publisherOptions);
-				System.out.println("This is the PublisherID associated with your entry: " + 
-						PublisherService.savePublisher(info.get(0), info.get(1), info.get(2)));
-				break;
-			case 2:
-				// Publisher delete
-				Publisher deletedEntry = PublisherService.deletePublisher(promptForId(userInput, "delete"));
-				if(deletedEntry == null) {
-					System.out.println("Unfortunatly, we failed to delete that entry");
-				} else {
-					System.out.println("Successfully deleted entry: (Info about deleted entry)");
-					System.out.println(deletedEntry.toString());
-				}
-				break;
-			case 3:
-				// Publisher update
-				System.out.println("What is the Publisher Id that you would like to update?");
-				int publisherId = validId(userInput);
-				userInput.nextLine();
-				List<String> updateList = updateInfo(userInput, publisherOptions);
-				Publisher updatedPublisher = new Publisher(publisherId, updateList.get(0), updateList.get(1), updateList.get(2));
-				boolean publisherUpdateCompleted = PublisherService.updatePublisher(updatedPublisher);
-				if(publisherUpdateCompleted) {
-					System.out.println("Completed Publisher Update Successfully");
-				} else {
-					System.out.println("ERROR: Either the Publisher Id was incorrect or an Error occurred");
-				}
-				break;
-			case 4:
-				// Publisher find
-				Publisher publisher = PublisherService.findPublisher(promptForId(userInput, "find"));
-				if(publisher == null) {
-					System.out.println("Could not locate that entry");
-				} else {
-					System.out.println(publisher.toString());
-				}
-				break;
-			case 5:
-				// Publisher findAll
-				List<Publisher> allPublishers = PublisherService.findAllPublishers();
-				allPublishers.parallelStream().forEach(a -> System.out.println(a.toString()));
-				break;
-			default:
-				System.out.println("No such operation.");
-			}
+			publisherMenu(userInput);
 			break;
 		default:
 			// No database
