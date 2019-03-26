@@ -26,10 +26,12 @@ public class BookService {
 		Book book = null;
 		
 		if(publisher == null) {
+			System.out.println("WARNING: that publisher Id does not exist, so an empty one was created");
 			publisherId = PublisherService.savePublisher(emptyCell, emptyCell, emptyCell);
 		}
 		
 		if(author == null) {
+			System.out.println("WARNING: that author Id does not exist, so an empty one was created");
 			authorId = AuthorService.saveAuthor(emptyCell);
 		}
 
