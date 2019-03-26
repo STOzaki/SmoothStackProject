@@ -71,6 +71,14 @@ public class UserInterface {
 		return yourChoice;
 	}
 	
+	private static void displayBookAndAssociation(Book foundBook) {
+		Author associatedAuthor = AuthorService.findAuthor(foundBook.getAuthorId());
+		Publisher associatedPublisher = PublisherService.findPublisher(foundBook.getPublisherId());
+		System.out.println("Book -> " + foundBook.toString());
+		System.out.println("Associated Author -> " + associatedAuthor.toString());
+		System.out.println("Associated Publisher -> " + associatedPublisher.toString());
+	}
+	
 	private static void authorMenu(Scanner userInput) {
 
 		List<String> info = new ArrayList<>();
@@ -225,22 +233,14 @@ public class UserInterface {
 			if(foundBook == null) {
 				System.out.println("Could not locate that entry");
 			} else {
-				Author foundAuthor = AuthorService.findAuthor(foundBook.getAuthorId());
-				Publisher foundPublisher = PublisherService.findPublisher(foundBook.getPublisherId());
-				System.out.println("Book -> " + foundBook.toString());
-				System.out.println("Associated Author -> " + foundAuthor.toString());
-				System.out.println("Associated Publisher -> " + foundPublisher.toString());
+				displayBookAndAssociation(foundBook);
 			}
 			break;
 		case 5:
 			// Book findAll
 			List<Book> allBooks = BookService.findAllBooks();
 			allBooks.stream().forEach(b -> {
-				Author foundAuthor = AuthorService.findAuthor(b.getAuthorId());
-				Publisher foundPublisher = PublisherService.findPublisher(b.getPublisherId());
-				System.out.println("Book -> " + b.toString());
-				System.out.println("Associated Author -> " + foundAuthor.toString());
-				System.out.println("Associated Publisher -> " + foundPublisher.toString());
+				displayBookAndAssociation(b);
 				System.out.println();
 				System.out.println("<----------------------------------------------------------------------->");
 				System.out.println();
