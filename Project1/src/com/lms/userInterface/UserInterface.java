@@ -225,13 +225,26 @@ public class UserInterface {
 			if(foundBook == null) {
 				System.out.println("Could not locate that entry");
 			} else {
-				System.out.println(foundBook.toString());
+				Author foundAuthor = AuthorService.findAuthor(foundBook.getAuthorId());
+				Publisher foundPublisher = PublisherService.findPublisher(foundBook.getPublisherId());
+				System.out.println("Book -> " + foundBook.toString());
+				System.out.println("Associated Author -> " + foundAuthor.toString());
+				System.out.println("Associated Publisher -> " + foundPublisher.toString());
 			}
 			break;
 		case 5:
 			// Book findAll
 			List<Book> allBooks = BookService.findAllBooks();
-			allBooks.parallelStream().forEach(a -> System.out.println(a.toString()));
+			allBooks.stream().forEach(b -> {
+				Author foundAuthor = AuthorService.findAuthor(b.getAuthorId());
+				Publisher foundPublisher = PublisherService.findPublisher(b.getPublisherId());
+				System.out.println("Book -> " + b.toString());
+				System.out.println("Associated Author -> " + foundAuthor.toString());
+				System.out.println("Associated Publisher -> " + foundPublisher.toString());
+				System.out.println();
+				System.out.println("<----------------------------------------------------------------------->");
+				System.out.println();
+			});
 			break;
 		default:
 			System.out.println("No such operation.");
