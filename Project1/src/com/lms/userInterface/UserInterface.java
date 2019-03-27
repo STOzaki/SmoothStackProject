@@ -79,6 +79,31 @@ public class UserInterface {
 		System.out.println("Associated Publisher -> " + associatedPublisher.toString());
 	}
 	
+	private static void displayPublisherWithBooks(Publisher publisher) {
+		System.out.println("Publisher -> " + publisher.toString());
+		System.out.println();
+		System.out.println("List of Books from this publisher:");
+		List<Book> listOfBooks = BookService.findAllBooks();
+		listOfBooks.stream()
+		.filter(b -> b.getPublisherId() == publisher.getId())
+		.forEach(b -> System.out.println(b.toString()));
+		System.out.println("<----------------------------------------------------------------------->");
+		System.out.println();
+	}
+	
+	private static void displayAuthorWithBooks(Author author) {
+		System.out.println("Author -> " + author.toString());
+		System.out.println();
+		System.out.println("List of Books from this author:");
+		List<Book> listOfBooks = BookService.findAllBooks();
+		listOfBooks.stream()
+		.filter(b -> b.getAuthorId() == author.getId())
+		.forEach(b -> System.out.println(b.toString()));
+		System.out.println("<----------------------------------------------------------------------->");
+		System.out.println();
+	}
+	
+	
 	private static void authorMenu(Scanner userInput) {
 
 		List<String> info = new ArrayList<>();
@@ -120,13 +145,13 @@ public class UserInterface {
 			if(foundAuthor == null) {
 				System.out.println("Could not locate that entry");
 			} else {
-				System.out.println(foundAuthor.toString());
+				displayAuthorWithBooks(foundAuthor);
 			}
 			break;
 		case 5:
 			// Author findAll
 			List<Author> allAuthors = AuthorService.findAllAuthors();
-			allAuthors.parallelStream().forEach(a -> System.out.println(a.toString()));
+			allAuthors.stream().forEach(a -> displayAuthorWithBooks(a));
 			break;
 		default:
 			System.out.println("No such operation.");
@@ -294,13 +319,13 @@ public class UserInterface {
 			if(publisher == null) {
 				System.out.println("Could not locate that entry");
 			} else {
-				System.out.println(publisher.toString());
+				displayPublisherWithBooks(publisher);
 			}
 			break;
 		case 5:
 			// Publisher findAll
 			List<Publisher> allPublishers = PublisherService.findAllPublishers();
-			allPublishers.parallelStream().forEach(a -> System.out.println(a.toString()));
+			allPublishers.stream().forEach(p -> displayPublisherWithBooks(p));
 			break;
 		default:
 			System.out.println("No such operation.");
