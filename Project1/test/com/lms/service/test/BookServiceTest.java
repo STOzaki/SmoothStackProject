@@ -2,6 +2,7 @@ package com.lms.service.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -14,15 +15,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.lms.dao.BookDaoImpl;
-import com.lms.model.Author;
 import com.lms.model.Book;
-import com.lms.model.Publisher;
 import com.lms.service.AuthorService;
 import com.lms.service.BookService;
 import com.lms.service.PublisherService;
 
 public class BookServiceTest {
-	private static final String emptyCell = "N/A";
 	
 	private String title = "Tester T. Testing";
 	private int authorId = -1;
@@ -63,41 +61,45 @@ public class BookServiceTest {
 		bookDao.delete(newBookId);
 		
 		int previousSize = bookDao.findAll().size();
-		newBookId = BookService.saveBook(title, authorId, publisherId)[0];
+		listOfPrimaryIds = BookService.saveBook(title, authorId, publisherId);
+		newBookId = listOfPrimaryIds[0];
 		int currentSize = bookDao.findAll().size();
+		
+		assertNotNull(AuthorService.findAuthor(authorId));
+		assertNotNull(PublisherService.findPublisher(publisherId));
+		assertEquals(listOfPrimaryIds[1], authorId);
+		assertEquals(listOfPrimaryIds[2], publisherId);
 		assertTrue(previousSize < currentSize);
 		assertTrue(bookDao.find(newBookId).getTitle().equals(title));
 	}
 
-	@DisplayName("Publisher and Author will be created if they do not exist")
+	@DisplayName("Book does not save if Author does not exist")
 	@Test
 	public void saveBookWithoutAuthor() throws FileNotFoundException, IOException {
 		bookDao.delete(newBookId);
 
 		int nonExistingAuthorId = Integer.MAX_VALUE;
 		listOfPrimaryIds = BookService.saveBook(title, nonExistingAuthorId, publisherId);
-		Author nonExistingAuthor = AuthorService.findAuthor(listOfPrimaryIds[1]);
+		Book nonExistingBook = BookService.findBook(listOfPrimaryIds[0]);
 		
-		assertTrue(nonExistingAuthor.getAuthorName().equals(emptyCell));
-		
-		// clean up
-		AuthorService.deleteAuthor(listOfPrimaryIds[1]);
+		assertNull(nonExistingBook);
+		assertEquals(listOfPrimaryIds[1], -1);
+		assertEquals(listOfPrimaryIds[2], publisherId);
 	}
 	
+	@DisplayName("Book does not save if Publisher does not exist")
 	@Test
 	public void saveBookWithoutPublisher() throws FileNotFoundException, IOException {
 		bookDao.delete(newBookId);
 		
 		int nonExistingPublisherId = Integer.MAX_VALUE;
 		listOfPrimaryIds = BookService.saveBook(title, authorId, nonExistingPublisherId);
-		Publisher nonExistingPublisher = PublisherService.findPublisher(listOfPrimaryIds[2]);
+		Book nonExistingBook = BookService.findBook(listOfPrimaryIds[0]);
+
+		assertNull(nonExistingBook);
+		assertEquals(listOfPrimaryIds[1], authorId);
+		assertEquals(listOfPrimaryIds[2], -1);
 		
-		assertTrue(nonExistingPublisher.getPublisherAddress().equals(emptyCell));
-		assertTrue(nonExistingPublisher.getPublisherName().equals(emptyCell));
-		assertTrue(nonExistingPublisher.getPublisherPhone().equals(emptyCell));
-		
-		// clean up
-		PublisherService.deletePublisher(listOfPrimaryIds[2]);
 	}
 
 	

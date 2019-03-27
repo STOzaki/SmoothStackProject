@@ -179,14 +179,28 @@ public class UserInterface {
 				} catch (NumberFormatException e) {
 					newAuthorId = -1;
 					newPublisherId = -1;
-					System.out.println("I am sorry but either the AuthorId or the PublisherId is incorrect");
+					System.out.println("I am sorry but AuthorId and/or the PublisherId is not a number");
 					info = infoGathering(userInput, bookOptions);
 				}
 			}
 			int[] ids = BookService.saveBook(info.get(0), newAuthorId, newPublisherId);
-			System.out.println("This is the BookID associated with your entry: " + ids[0]);
-			System.out.println("BookId: " + ids[1]);
-			System.out.println("PublisherId: " + ids[2]);
+			
+			if(ids[0] == -1) {
+				System.out.println("Error: could not save your book.");
+			}
+			if(ids[1] == -1) {
+				System.out.println("I am sorry but that Author Id does not exist.");
+			}
+			
+			if(ids[2] == -1) {
+				System.out.println("I am sorry but that Publisher Id does not exist.");
+			}
+			
+			if(ids[0] != -1 && ids[1] != -1 && ids[2] != -1) {
+				System.out.println("This is the BookID associated with your entry: " + ids[0]);
+				System.out.println("AuthorId: " + ids[1]);
+				System.out.println("PublisherId: " + ids[2]);
+			}
 			break;
 		case 2:
 			// Book delete

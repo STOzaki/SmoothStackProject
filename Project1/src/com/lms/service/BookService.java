@@ -10,14 +10,16 @@ import com.lms.model.Book;
 import com.lms.model.Publisher;
 
 public class BookService {
-	private static final String emptyCell = "N/A";
 	
+	// returns -1 in the array[1] and array[2] for author or publisher if they are not found respectively
+	// and array[0] will be -1 if book does not get created
 	public static int[] saveBook(String title, int authorId, int publisherId) {
 		Publisher publisher = null;
 		Author author = null;
 		publisher = PublisherService.findPublisher(publisherId);
 		author = AuthorService.findAuthor(authorId);
 		
+		// primaryIds will always start as -1
 		int[] primaryIds = new int[3];
 		for(int i = 0; i < primaryIds.length;i++)
 			primaryIds[i] = -1;
@@ -26,21 +28,22 @@ public class BookService {
 		Book book = null;
 		
 		if(publisher == null) {
-			System.out.println("WARNING: that publisher Id does not exist, so an empty one was created");
-			publisherId = PublisherService.savePublisher(emptyCell, emptyCell, emptyCell);
+			publisherId = -1;
 		}
 		
 		if(author == null) {
-			System.out.println("WARNING: that author Id does not exist, so an empty one was created");
-			authorId = AuthorService.saveAuthor(emptyCell);
+			authorId = -1;
 		}
-
-		book = new Book(0, title, authorId, publisherId);
-		try {
-			primaryIds[0] = bookDao.save(book);
-		} catch (IOException e) {
-			e.printStackTrace();
+		
+		if(authorId != -1 && publisherId != -1) {
+			book = new Book(0, title, authorId, publisherId);
+			try {
+				primaryIds[0] = bookDao.save(book);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		
 		
 		primaryIds[1] = authorId;
 		primaryIds[2] = publisherId;
