@@ -14,7 +14,7 @@ import com.lms.model.Book;
 
 
 public class BookDaoImpl implements BookDao{
-	private static String REGEX = "`";
+	private static String REGEX = ",";
 	private static String FILELOCATION = "./resources/books.csv";
 
 	// creates new entry using DataObject into file

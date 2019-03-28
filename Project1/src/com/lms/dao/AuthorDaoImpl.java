@@ -13,7 +13,7 @@ import java.util.List;
 import com.lms.model.Author;
 
 public class AuthorDaoImpl implements AuthorDao{
-	private static String REGEX = "`";
+	private static String REGEX = ",";
 	private static String FILELOCATION = "./resources/authors.csv";
 
 	// creates new entry using DataObject into file

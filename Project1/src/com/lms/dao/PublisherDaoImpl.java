@@ -13,7 +13,7 @@ import java.util.List;
 import com.lms.model.Publisher;
 
 public class PublisherDaoImpl implements PublisherDao{
-	private static String REGEX = "`";
+	private static String REGEX = ",";
 	private static String FILELOCATION = "./resources/publishers.csv";
 
 	// creates new entry using DataObject into file
