@@ -28,7 +28,7 @@ public class AuthorDaoImpl implements AuthorDao{
 			primaryId = listAuthor.get(listAuthor.size() - 1).getId() + 1;
 		}
 		
-		String entry = primaryId + REGEX + author.getAuthorName();
+		String entry = primaryId + REGEX + configureString(author.getAuthorName());
 		FileWriter fw = new FileWriter(FILELOCATION, true);
 		BufferedWriter bw = new BufferedWriter(fw);
 		PrintWriter pw = new PrintWriter(bw);
@@ -96,7 +96,7 @@ public class AuthorDaoImpl implements AuthorDao{
 				} else {
 					authorName = splitArray[1];
 				}
-				String newEntry = author.getId() + REGEX + authorName;
+				String newEntry = author.getId() + REGEX + configureString(authorName);
 				newEntries.add(newEntry);
 			} else {
 				newEntries.add(currentLine);
@@ -127,7 +127,7 @@ public class AuthorDaoImpl implements AuthorDao{
 			String[] splitEntry = currentLine.split(REGEX);
 			int entryId = Integer.parseInt(splitEntry[0]);
 			if(entryId == id) {
-				correctAuthor = new Author(entryId, splitEntry[1]);
+				correctAuthor = new Author(entryId, deconfigureString(splitEntry[1]));
 			}
 		}
 		br.close();
@@ -143,7 +143,7 @@ public class AuthorDaoImpl implements AuthorDao{
 		String currentLine;
 		while((currentLine = br.readLine()) != null) {
 			String[] splitEntry = currentLine.split(REGEX);
-			Author author = new Author(Integer.parseInt(splitEntry[0]), splitEntry[1]);
+			Author author = new Author(Integer.parseInt(splitEntry[0]), deconfigureString(splitEntry[1]));
 			authors.add(author);
 		}
 		

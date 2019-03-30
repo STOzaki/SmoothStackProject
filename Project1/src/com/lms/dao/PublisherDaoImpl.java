@@ -28,8 +28,8 @@ public class PublisherDaoImpl implements PublisherDao{
 			primaryId = listPublisher.get(listPublisher.size() - 1).getId() + 1;
 		}
 		
-		String newEntry = primaryId + REGEX + publisher.getPublisherName() + 
-				REGEX + publisher.getPublisherAddress() + REGEX + publisher.getPublisherPhone();
+		String newEntry = primaryId + REGEX + configureString(publisher.getPublisherName()) + 
+				REGEX + configureString(publisher.getPublisherAddress()) + REGEX + configureString(publisher.getPublisherPhone());
 		FileWriter fw = new FileWriter(FILELOCATION, true);
 		BufferedWriter bw = new BufferedWriter(fw);
 		PrintWriter pw = new PrintWriter(bw);
@@ -56,7 +56,7 @@ public class PublisherDaoImpl implements PublisherDao{
 			if(entryId != id) {
 				newFileString.add(currentLine);
 			} else {
-				deletedPublisher = new Publisher(entryId, splitEntry[1], splitEntry[2], splitEntry[3]);
+				deletedPublisher = new Publisher(entryId, deconfigureString(splitEntry[1]), deconfigureString(splitEntry[2]), deconfigureString(splitEntry[3]));
 			}
 		}
 		br.close();
@@ -96,19 +96,19 @@ public class PublisherDaoImpl implements PublisherDao{
 			String publisherPhone = "";
 			if(entryId == publisher.getId()) {
 				if(!publisher.getPublisherName().isEmpty()) {
-					publisherName = publisher.getPublisherName();
+					publisherName = configureString(publisher.getPublisherName());
 				} else {
 					publisherName = splitArray[1];
 				}
 				
 				if(!publisher.getPublisherAddress().isEmpty()) {
-					publisherAddress = publisher.getPublisherAddress();
+					publisherAddress = configureString(publisher.getPublisherAddress());
 				} else {
 					publisherAddress = splitArray[2];
 				}
 				
 				if(!publisher.getPublisherPhone().isEmpty()) {
-					publisherPhone = publisher.getPublisherPhone();
+					publisherPhone = configureString(publisher.getPublisherPhone());
 				} else {
 					publisherPhone = splitArray[3];
 				}
@@ -144,7 +144,7 @@ public class PublisherDaoImpl implements PublisherDao{
 			String[] splitEntry = currentLine.split(REGEX);
 			int entryId = Integer.parseInt(splitEntry[0]);
 			if(entryId == id) {
-				correctPublisher = new Publisher(entryId, splitEntry[1],  splitEntry[2], splitEntry[3]);
+				correctPublisher = new Publisher(entryId, deconfigureString(splitEntry[1]),  deconfigureString(splitEntry[2]), deconfigureString(splitEntry[3]));
 			}
 		}
 		br.close();
@@ -160,7 +160,8 @@ public class PublisherDaoImpl implements PublisherDao{
 		String currentLine;
 		while((currentLine = br.readLine()) != null) {
 			String[] splitEntry = currentLine.split(REGEX);
-			Publisher publisher = new Publisher(Integer.parseInt(splitEntry[0]), splitEntry[1], splitEntry[2], splitEntry[3]);
+			Publisher publisher = new Publisher(Integer.parseInt(deconfigureString(splitEntry[0])), deconfigureString(splitEntry[1]),
+					deconfigureString(splitEntry[2]), deconfigureString(splitEntry[3]));
 			publishers.add(publisher);
 		}
 		

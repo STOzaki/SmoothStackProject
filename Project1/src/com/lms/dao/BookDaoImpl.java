@@ -29,7 +29,7 @@ public class BookDaoImpl implements BookDao{
 			primaryId = listBook.get(listBook.size() - 1).getId() + 1;
 		}
 		
-		String entry = primaryId + REGEX + book.getTitle() + REGEX
+		String entry = primaryId + REGEX + configureString(book.getTitle()) + REGEX
 				+ book.getAuthorId() + REGEX + book.getPublisherId();
 		FileWriter fw = new FileWriter(FILELOCATION, true);
 		BufferedWriter bw = new BufferedWriter(fw);
@@ -62,7 +62,7 @@ public class BookDaoImpl implements BookDao{
 			if(entryId != id) {
 				newFileString.add(currentLine);
 			} else {
-				deletedBook = new Book(entryId, splitEntry[1], authorId, publisherId);
+				deletedBook = new Book(entryId, deconfigureString(splitEntry[1]), authorId, publisherId);
 			}
 		}
 		br.close();
@@ -105,7 +105,7 @@ public class BookDaoImpl implements BookDao{
 			int publisherId = -1;
 			if(entryId == book.getId()) {
 				if(!book.getTitle().isEmpty()) {
-					title = book.getTitle();
+					title = configureString(book.getTitle());
 				} else {
 					title = splitArray[1];
 				}
@@ -156,7 +156,7 @@ public class BookDaoImpl implements BookDao{
 			int publisherId = Integer.parseInt(splitEntry[3]);
 
 			if(entryId == id) {
-				correctBook = new Book(entryId, splitEntry[1],  authorId, publisherId);
+				correctBook = new Book(entryId, deconfigureString(splitEntry[1]),  authorId, publisherId);
 			}
 		}
 		br.close();
@@ -177,7 +177,7 @@ public class BookDaoImpl implements BookDao{
 			int entryId = Integer.parseInt(splitEntry[0]);
 			int authorId = Integer.parseInt(splitEntry[2]);
 			int publisherId = Integer.parseInt(splitEntry[3]);
-			Book book = new Book(entryId, splitEntry[1], authorId, publisherId);
+			Book book = new Book(entryId, deconfigureString(splitEntry[1]), authorId, publisherId);
 			books.add(book);
 		}
 		

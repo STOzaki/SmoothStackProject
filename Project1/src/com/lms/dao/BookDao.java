@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.lms.model.Book;
 
-public interface BookDao {
+public interface BookDao extends Dao<Book> {
 	// creates new entry using DataObject into file
 	public abstract int save(Book book) throws IOException;
 	// deletes associated book entry using the bookId and returns the entry in an dataObject
