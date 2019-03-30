@@ -94,9 +94,9 @@ public class PublisherServiceTest {
 		
 		assertTrue(updateCompleted);
 		assertEquals(updatedPublisher.getId(), publisher.getId());
-		assertTrue(updatedPublisher.getPublisherName().equals(publisher.getPublisherName()));
-		assertTrue(updatedPublisher.getPublisherAddress().equals(publisher.getPublisherAddress()));
-		assertTrue(updatedPublisher.getPublisherPhone().equals(publisher.getPublisherPhone()));
+		assertEquals(updatedPublisher.getPublisherName(), publisher.getPublisherName());
+		assertEquals(updatedPublisher.getPublisherAddress(), publisher.getPublisherAddress());
+		assertEquals(updatedPublisher.getPublisherPhone(), publisher.getPublisherPhone());
 	}
 	
 	@DisplayName("Does not update correctly because there is no such Author Id")
